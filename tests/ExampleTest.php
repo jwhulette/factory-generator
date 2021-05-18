@@ -1,6 +1,6 @@
 <?php
 
-namespace VendorName\Skeleton\Tests;
+namespace Jwhulette\FactoryGenerator\Tests;
 
 use PHPUnit\Framework\TestCase;
 

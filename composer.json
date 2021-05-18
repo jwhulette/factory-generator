@@ -1,16 +1,16 @@
 {
-    "name": "vendor_slug/package_slug",
-    "description": ":package_description",
+    "name": "jwhulette/factory_generator",
+    "description": "Automatically generate factories from database tables",
     "keywords": [
-        ":vendor_name",
-        "package_slug"
+        "jwhulette",
+        "factory_generator"
     ],
-    "homepage": "https://github.com/vendor_slug/package_slug",
+    "homepage": "https://github.com/jwhulette/factory_generator",
     "license": "MIT",
     "authors": [
         {
-            "name": ":author_name",
-            "email": "author@domain.com",
+            "name": "Wes Hulette",
+            "email": "jwhulette@gmail.com",
             "role": "Developer"
         }
     ],
@@ -25,12 +25,12 @@
     },
     "autoload": {
         "psr-4": {
-            "VendorName\\Skeleton\\": "src"
+            "Jwhulette\\FactoryGenerator\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "VendorName\\Skeleton\\Tests\\": "tests"
+            "Jwhulette\\FactoryGenerator\\Tests\\": "tests"
         }
     },
     "scripts": {
