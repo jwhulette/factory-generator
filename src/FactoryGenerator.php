@@ -2,6 +2,6 @@
 
 namespace Jwhulette\FactoryGenerator;
 
-class FactoryGeneratorClass
+class FactoryGenerator
 {
 }

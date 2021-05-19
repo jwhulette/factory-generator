@@ -1,42 +1,28 @@
-# Automatically generate factories from database tables
+# Generate Laravel 8+ database factories
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/jwhulette/factory_generator.svg?style=flat-square)](https://packagist.org/packages/jwhulette/factory_generator)
-[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/jwhulette/factory_generator/run-tests?label=tests)](https://github.com/jwhulette/factory_generator/actions?query=workflow%3ATests+branch%3Amaster)
-[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/jwhulette/factory_generator/Check%20&%20fix%20styling?label=code%20style)](https://github.com/jwhulette/factory_generator/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amaster)
-[![Total Downloads](https://img.shields.io/packagist/dt/jwhulette/factory_generator.svg?style=flat-square)](https://packagist.org/packages/jwhulette/factory_generator)
+<!-- [![Latest Version on Packagist](https://img.shields.io/packagist/v/jwhulette/factory-generator.svg?style=flat-square)](https://packagist.org/packages/jwhulette/factory-generator) -->
+[![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/jwhulette/factory-generator/run-tests?label=tests)](https://github.com/jwhulette/factory-generator/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/jwhulette/factory-generator/Check%20&%20fix%20styling?label=code%20style)](https://github.com/jwhulette/factory-generator/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
+<!-- [![Total Downloads](https://img.shields.io/packagist/dt/jwhulette/factory-generator.svg?style=flat-square)](https://packagist.org/packages/jwhulette/factory-generator) -->
 
 ---
-This package can be used as to scaffold a Laravel package. Follow these steps to get started:
 
-1. Press the "Use template" button at the top of this repo to create a new repo with the contents of this factory_generator
-2. Run "./configure.sh" to run a script that will replace all placeholders throughout all the files
-3. Have fun creating your package.
-4. If you need help creating a package, consider picking up our <a href="https://laravelpackage.training">Laravel Package Training</a> video course.
+<img src=".github/images/Factory Generator.png" width="80%" style="display: block;margin-left: auto;margin-right: auto;" />
+
 ---
-
-This is where your description should go. Try and limit it to a paragraph or two. Consider adding a small example.
-
-## Support us
-
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/factory-generator.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/factory-generator)
-
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
-
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
 
 ## Installation
 
 You can install the package via composer:
 
 ```bash
-composer require jwhulette/factory_generator
+composer require jwhulette/factory-generator
 ```
-
 ## Usage
 
 ```php
-$factory_generator = new Jwhulette\FactoryGenerator();
-echo $factory_generator->echoPhrase('Hello, Jwhulette!');
+$factory-generator = new Jwhulette\FactoryGenerator();
+echo $factory-generator->echoPhrase('Hello, Spatie!');
 ```
 
 ## Testing
