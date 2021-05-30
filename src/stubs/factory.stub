@@ -13,7 +13,7 @@ class {{ model }}Factory extends Factory
     public function definition()
     {
         return [
-            //
+            {{ definition }}
         ];
     }
 }
