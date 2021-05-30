@@ -18,12 +18,4 @@ class CreateGeneratorTable extends Migration
             $table->date('date_of_birth');
         });
     }
-
-    /**
-     * Reverse the migrations.
-     */
-    public function down()
-    {
-        Schema::drop('test');
-    }
 }

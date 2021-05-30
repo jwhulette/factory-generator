@@ -109,6 +109,7 @@ class FactoryGeneratorCommand extends Command
 
         $definition = '';
 
+        /** @var \Doctrine\DBAL\Schema\Column $column */
         foreach ($columns as $column) {
             $name = $column->getName();
 
@@ -181,7 +182,7 @@ class FactoryGeneratorCommand extends Command
     }
 
     /**
-     * @param string $table
+     * @param \Illuminate\Database\Eloquent\Model $model
      *
      * @return string
      */
@@ -193,7 +194,7 @@ class FactoryGeneratorCommand extends Command
     }
 
     /**
-     * @param string $classMap
+     * @param array $classMap
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
@@ -215,7 +216,7 @@ class FactoryGeneratorCommand extends Command
     /**
      * @param \Illuminate\Database\Eloquent\Model $model
      *
-     * @return array<Doctrine\DBAL\Schema\Column>
+     * @return array<\Doctrine\DBAL\Schema\Column>
      */
     protected function getColumns(Model $model): array
     {
