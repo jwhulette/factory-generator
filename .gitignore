@@ -10,4 +10,7 @@ phpunit.xml
 psalm.xml
 vendor
 .php-cs-fixer.cache
-
+# exclude everything
+tests/factories/*
+# exception to the rule
+!tests/factories/.gitkeep

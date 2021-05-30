@@ -13,13 +13,13 @@ class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $this->loadMigrationsFrom(__DIR__  . '/database/migrations');
-
-        $this->artisan('migrate');
-
         app()
             ->setBasePath(realpath(__DIR__ . '/..'))
             ->useDatabasePath(__DIR__);
+
+        $this->loadMigrationsFrom(database_path('migrations'));
+
+        $this->artisan('migrate');
     }
 
     protected function tearDown(): void

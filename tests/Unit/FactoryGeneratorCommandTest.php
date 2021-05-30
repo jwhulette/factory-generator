@@ -6,11 +6,9 @@ namespace Jwhulette\FactoryGenerator\Tests\Unit;
 
 use Spatie\Snapshots\MatchesSnapshots;
 use Jwhulette\FactoryGenerator\Tests\TestCase;
-use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class FactoryGeneratorCommandTest extends TestCase
 {
-    use RefreshDatabase;
     use MatchesSnapshots;
 
     public function setUp(): void

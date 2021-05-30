@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Jwhulette\FactoryGenerator\Commands;
 
 use Illuminate\Support\Str;
@@ -23,6 +25,9 @@ class FactoryGeneratorCommand extends Command
         return 0;
     }
 
+    /**
+     * @param string $model
+     */
     protected function generateFactory(string $model)
     {
         $classMap = $this->generateClassMap($model);
@@ -38,17 +43,27 @@ class FactoryGeneratorCommand extends Command
         $stub = $this->replacePlaceholders($model, $namespacedModel, $stub);
 
         $stub = $this->createDefinition($modelInstance, $stub);
-        dd($stub);
+
         $this->writeFactory($stub, $model);
     }
 
-    protected function writeFactory(string $stub, string $model)
+    /**
+     * @param string $stub
+     * @param string $model
+     */
+    protected function writeFactory(string $stub, string $model): void
     {
         $path = $this->getFactoryFilePath($model);
 
         File::put($path, $stub);
     }
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $modelInstance
+     * @param string $stub
+     *
+     * @return string
+     */
     protected function createDefinition(Model $modelInstance, string $stub): string
     {
         $definition = $this->makeDefinition($modelInstance);
@@ -56,6 +71,13 @@ class FactoryGeneratorCommand extends Command
         return $this->replaceDefinition($stub, $definition);
     }
 
+    /**
+     * @param string $model
+     * @param string $namespacedModel
+     * @param string $sub
+     *
+     * @return string
+     */
     protected function replacePlaceholders(string $model, string $namespacedModel, string $sub): string
     {
         $replace = $this->replaceModelName($sub, $model);
@@ -66,8 +88,6 @@ class FactoryGeneratorCommand extends Command
     }
 
     /**
-     * Replace the definition placeholder in the stub
-     *
      * @param string $stub
      * @param string $definition
      *
@@ -79,8 +99,6 @@ class FactoryGeneratorCommand extends Command
     }
 
     /**
-     * Make the factory definition
-     *
      * @param \Illuminate\Database\Eloquent\Model $model
      *
      * @return string
@@ -100,21 +118,20 @@ class FactoryGeneratorCommand extends Command
 
             $columnName = $this->formatColumnName($name);
             $definition .= "        ";
-            $definition .= "    '$columnName' => '', \n";
+            $definition .= "    '$columnName' => '',\n";
         }
-        return Str::of($definition)->trim()->rtrim(',');
+
+        return Str::of($definition)->trim()->rtrim(',')->__toString();
     }
 
     /**
-     * Format the property key
-     *
      * @param string $columnName
      *
      * @return string
      */
     protected function formatColumnName(string $columnName): string
     {
-        return Str::of($columnName)->lower();
+        return Str::of($columnName)->lower()->__toString();
     }
 
     /**
@@ -131,8 +148,6 @@ class FactoryGeneratorCommand extends Command
     }
 
     /**
-     * Replace the classname placeholder
-     *
      * @param string $namespacedModel
      * @param string $stub
      *
@@ -144,8 +159,6 @@ class FactoryGeneratorCommand extends Command
     }
 
     /**
-     * Replace the classname placeholder in the stub
-     *
      * @param string $stub
      * @param string $path
      *
@@ -157,8 +170,6 @@ class FactoryGeneratorCommand extends Command
     }
 
     /**
-     * Replace the classname placeholder in the stub
-     *
      * @param string $stub
      * @param string $model
      *
@@ -170,8 +181,6 @@ class FactoryGeneratorCommand extends Command
     }
 
     /**
-     * Get the table name for use as the model name
-     *
      * @param string $table
      *
      * @return string
@@ -180,12 +189,10 @@ class FactoryGeneratorCommand extends Command
     {
         $table = $model->getTable();
 
-        return Str::of($table)->afterLast('.')->camel()->ucfirst()->singular();
+        return Str::of($table)->afterLast('.')->camel()->ucfirst()->singular()->__toString();
     }
 
     /**
-     * Create a model instance
-     *
      * @param string $classMap
      *
      * @return \Illuminate\Database\Eloquent\Model
@@ -196,8 +203,6 @@ class FactoryGeneratorCommand extends Command
     }
 
     /**
-     * Get the factory stub
-     *
      * @return string
      */
     protected function getFactoryStub(): string
@@ -208,8 +213,6 @@ class FactoryGeneratorCommand extends Command
     }
 
     /**
-     * Get the database columns
-     *
      * @param \Illuminate\Database\Eloquent\Model $model
      *
      * @return array<Doctrine\DBAL\Schema\Column>
@@ -230,8 +233,6 @@ class FactoryGeneratorCommand extends Command
     }
 
     /**
-     * Generate a classmap for the model
-     *
      * @param string $model
      *
      * @return array
