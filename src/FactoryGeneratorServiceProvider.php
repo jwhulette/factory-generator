@@ -17,6 +17,7 @@ class FactoryGeneratorServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('factory-generator')
+            ->hasConfigFile()
             ->hasCommand(FactoryGeneratorCommand::class);
     }
 }
