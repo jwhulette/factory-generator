@@ -38,7 +38,57 @@ class FactoryGeneratorCommandTest extends TestCase
 
         $model = 'tests/Models/Generator';
 
+        $this->artisan('factory-generate', ['model' => $model]);
+
         $this->artisan('factory-generate', ['model' => $model])
             ->assertExitCode(1);
+    }
+
+    public function testCreateFactoryOptionLowerCase()
+    {
+        File::cleanDirectory(database_path('factories'));
+
+        $model = 'tests/Models/Generator';
+
+        $file = database_path('factories/GeneratorFactory.php');
+
+        config()->set('factory-generator.lower_case_column', true);
+
+        $this->artisan('factory-generate', ['model' => $model])
+            ->assertExitCode(0);
+
+        $this->assertMatchesFileSnapshot($file);
+    }
+
+    public function testCreateFactoryOptionSetNullDefault()
+    {
+        File::cleanDirectory(database_path('factories'));
+
+        $model = 'tests/Models/Generator';
+
+        $file = database_path('factories/GeneratorFactory.php');
+
+        config()->set('factory-generator.definition.set_null_default', true);
+
+        $this->artisan('factory-generate', ['model' => $model])
+            ->assertExitCode(0);
+
+        $this->assertMatchesFileSnapshot($file);
+    }
+
+    public function testCreateFactoryOptionSetDate()
+    {
+        File::cleanDirectory(database_path('factories'));
+
+        $model = 'tests/Models/Generator';
+
+        $file = database_path('factories/GeneratorFactory.php');
+
+        config()->set('factory-generator.definition.set_date_now', true);
+
+        $this->artisan('factory-generate', ['model' => $model])
+            ->assertExitCode(0);
+
+        $this->assertMatchesFileSnapshot($file);
     }
 }

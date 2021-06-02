@@ -16,6 +16,13 @@ class CreateGeneratorTable extends Migration
             $table->string('first_name');
             $table->string('last_name');
             $table->date('date_of_birth');
+            $table->binary('photo');
+            $table->boolean('CONFIRMED');
+            $table->char('name', 100)->nullable();
+            $table->decimal('amount', 8, 2);
+            $table->double('amountDouble', 8, 2);
+            $table->float('amountFloat', 8, 2);
+            $table->time('sunrise');
         });
     }
 }

@@ -17,11 +17,11 @@ class GeneratorFactory extends Factory
             'last_name' => '',
             'date_of_birth' => '',
             'photo' => '',
-            'CONFIRMED' => '',
+            'confirmed' => '',
             'name' => '',
             'amount' => '',
-            'amountDouble' => '',
-            'amountFloat' => '',
+            'amountdouble' => '',
+            'amountfloat' => '',
             'sunrise' => ''
         ];
     }

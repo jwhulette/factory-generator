@@ -18,7 +18,7 @@ class GeneratorFactory extends Factory
             'date_of_birth' => '',
             'photo' => '',
             'CONFIRMED' => '',
-            'name' => '',
+            'name' => null,
             'amount' => '',
             'amountDouble' => '',
             'amountFloat' => '',

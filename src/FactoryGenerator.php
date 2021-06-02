@@ -39,7 +39,7 @@ class FactoryGenerator
         }
 
         $stub = $this->renderStub($modelInstance, $modelName, $namespacedModel);
-        dd($stub);
+
         $this->writeFactory($modelName, $stub);
     }
 
@@ -142,12 +142,12 @@ class FactoryGenerator
     /**
      * @param \Doctrine\DBAL\Schema\Column  $column
      *
-     * @return mixed
+     * @return string|int
      */
-    public function getDefinition(Column $column, array $definitionConfigs): mixed
+    public function getDefinition(Column $column, array $definitionConfigs): string|int
     {
-        if ($definitionConfigs['set_null_default'] === true && $column->getNotNull() === true) {
-            return null;
+        if ($definitionConfigs['set_null_default'] === true && $column->getNotNull() === false) {
+            return 'null';
         }
 
         $columnType = $column->getType()->getName();

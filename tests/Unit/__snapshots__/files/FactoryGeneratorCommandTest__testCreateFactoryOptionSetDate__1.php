@@ -15,7 +15,7 @@ class GeneratorFactory extends Factory
         return [
             'first_name' => '',
             'last_name' => '',
-            'date_of_birth' => '',
+            'date_of_birth' => \now(),
             'photo' => '',
             'CONFIRMED' => '',
             'name' => '',

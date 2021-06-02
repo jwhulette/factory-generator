@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jwhulette\FactoryGenerator\Tests;
 
+use Illuminate\Support\Facades\File;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Jwhulette\FactoryGenerator\FactoryGeneratorServiceProvider;
 
@@ -25,6 +26,10 @@ class TestCase extends BaseTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
+
+        $file = database_path('factories/GeneratorFactory.php');
+
+        File::delete($file);
     }
 
     protected function getPackageProviders($app)
