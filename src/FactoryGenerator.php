@@ -34,8 +34,6 @@ class FactoryGenerator
 
         if (Config::get('factory-generator.overwrite') === false && File::exists($factory)) {
             throw new FactoryGeneratorException($modelName . 'Factory already exists');
-
-            return 1;
         }
 
         $stub = $this->renderStub($modelInstance, $modelName, $namespacedModel);
