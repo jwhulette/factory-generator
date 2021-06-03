@@ -7,6 +7,7 @@ namespace Jwhulette\FactoryGenerator\Tests\Unit;
 use Illuminate\Support\Facades\File;
 use Spatie\Snapshots\MatchesSnapshots;
 use Jwhulette\FactoryGenerator\Tests\TestCase;
+use Jwhulette\FactoryGenerator\Tests\Models\Generator;
 use Jwhulette\FactoryGenerator\Exceptions\FactoryGeneratorException;
 
 class FactoryGeneratorCommandTest extends TestCase
@@ -30,6 +31,12 @@ class FactoryGeneratorCommandTest extends TestCase
             ->assertExitCode(0);
 
         $this->assertMatchesFileSnapshot($file);
+
+        $generator = \resolve(Generator::class);
+
+        $factory = $generator::factory()->create();
+
+        $this->assertInstanceOf(Generator::class, $factory);
     }
 
     public function testErrorWhenFactoryExists()
@@ -58,6 +65,12 @@ class FactoryGeneratorCommandTest extends TestCase
             ->assertExitCode(0);
 
         $this->assertMatchesFileSnapshot($file);
+
+        $generator = \resolve(Generator::class);
+
+        $factory = $generator::factory()->create();
+
+        $this->assertInstanceOf(Generator::class, $factory);
     }
 
     public function testCreateFactoryOptionSetNullDefault()
@@ -74,6 +87,12 @@ class FactoryGeneratorCommandTest extends TestCase
             ->assertExitCode(0);
 
         $this->assertMatchesFileSnapshot($file);
+
+        $generator = \resolve(Generator::class);
+
+        $factory = $generator::factory()->create();
+
+        $this->assertInstanceOf(Generator::class, $factory);
     }
 
     public function testCreateFactoryOptionSetDate()
@@ -90,5 +109,11 @@ class FactoryGeneratorCommandTest extends TestCase
             ->assertExitCode(0);
 
         $this->assertMatchesFileSnapshot($file);
+
+        $generator = \resolve(Generator::class);
+
+        $factory = $generator::factory()->create();
+
+        $this->assertInstanceOf(Generator::class, $factory);
     }
 }
