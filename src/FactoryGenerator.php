@@ -120,7 +120,7 @@ class FactoryGenerator
         foreach ($columns as $column) {
             $name = $column->getName();
 
-            /**
+            /*
              * Skip any columns listed in the the skip columns configuration array
              */
             if (\in_array($name, $skipColums)) {
@@ -130,7 +130,7 @@ class FactoryGenerator
             $columnName = $this->formatColumnName($name);
             $columnDefinition = $this->getDefinition($column, $definitionConfigs);
 
-            $definition .= "        ";
+            $definition .= '        ';
             $definition .= "    '$columnName' => $columnDefinition,\n";
         }
 
@@ -142,7 +142,7 @@ class FactoryGenerator
      *
      * @return string|int
      */
-    public function getDefinition(Column $column, array $definitionConfigs): string|int
+    public function getDefinition(Column $column, array $definitionConfigs): string | int
     {
         if ($definitionConfigs['set_null_default'] === true && $column->getNotNull() === false) {
             return 'null';

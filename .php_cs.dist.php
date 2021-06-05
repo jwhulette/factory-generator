@@ -27,7 +27,7 @@ $rules = [
     ],
     'class_definition' => true,
     'concat_space'     => [
-        'spacing' => 'none',
+        'spacing' => 'one',
     ],
     'declare_equal_normalize'      => true,
     'elseif'                       => true,
@@ -89,7 +89,7 @@ $rules = [
     'normalize_index_brace'                      => true,
     'not_operator_with_successor_space'          => true,
     'object_operator_without_whitespace'         => true,
-    'ordered_imports'                            => ['sort_algorithm' => 'alpha'],
+    'ordered_imports'                            => ['sort_algorithm' => 'length'],
     'phpdoc_indent'                              => true,
     'phpdoc_line_span'                           => true,
     'phpdoc_no_access'                           => true,

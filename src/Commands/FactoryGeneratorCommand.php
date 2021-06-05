@@ -17,7 +17,7 @@ class FactoryGeneratorCommand extends Command
     {
         $model = $this->argument('model');
 
-        (new FactoryGenerator)->generateFactory($model);
+        (new FactoryGenerator())->generateFactory($model);
 
         return 0;
     }
