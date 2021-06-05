@@ -18,11 +18,70 @@ You can install the package via composer:
 ```bash
 composer require jwhulette/factory-generator
 ```
+You can publish the config file with:
+```bash
+php artisan vendor:publish --provider="JJwhulette\FactoryGenerator\FactoryGeneratorServiceProvider.php" --tag="package_slug-config"
+```
+
+This is the contents of the published config file:
+
+```php
+return [
+    /*
+    |--------------------------------------------------------------------------
+    | Overwrite an existing factory
+    |--------------------------------------------------------------------------
+    */
+    'overwrite' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Set the factory column name to lower case
+    |--------------------------------------------------------------------------
+    */
+    'lower_case_column' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | An array of columns to skip on factory creation
+    |--------------------------------------------------------------------------
+    */
+    'skip_columns' => ['id'],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Set the defintion based on the column properties
+    |--------------------------------------------------------------------------
+    */
+    'definition' => [
+        /*
+        |--------------------------------------------------------------------------
+        | If the column allows nulls, set the factory column value to null
+        | IMPORTANT: This setting will overide all others
+        |--------------------------------------------------------------------------
+        */
+        'set_null_default' => false,
+
+        /*
+        |--------------------------------------------------------------------------
+        | If the column is a date column, set it to now()
+        |--------------------------------------------------------------------------
+        */
+        'set_date_now' => false,
+
+        /*
+        |--------------------------------------------------------------------------
+        | If the column is a numeric column, set it to 0
+        |--------------------------------------------------------------------------
+        */
+        'set_numeric_zero' => false,
+    ],
+];
+```
 ## Usage
 
 ```php
-$factory-generator = new Jwhulette\FactoryGenerator();
-echo $factory-generator->echoPhrase('Hello, Spatie!');
+php artisan factory:generate app/Models/User
 ```
 
 ## Testing

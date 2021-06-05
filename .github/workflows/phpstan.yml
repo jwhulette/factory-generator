@@ -1,14 +1,14 @@
-name: Psalm
+name: Phpstan
 
 on:
   push:
     paths:
       - '**.php'
-      - 'psalm.xml.dist'
+      - 'phpstan.neon.dist'
 
 jobs:
   psalm:
-    name: psalm
+    name: phpstan
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -30,4 +30,4 @@ jobs:
         run: composer install -n --prefer-dist
 
       - name: Run psalm
-        run: ./vendor/bin/psalm --output-format=github
+        run: ./vendor/bin/phpstan analyse --memory-limit=2G

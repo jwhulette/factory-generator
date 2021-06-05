@@ -9,7 +9,7 @@ use Jwhulette\FactoryGenerator\FactoryGenerator;
 
 class FactoryGeneratorCommand extends Command
 {
-    public $signature = 'factory-generate {model}';
+    public $signature = 'factory:generate {model}';
 
     public $description = 'Generate a factory by suppling the path to your model';
 
