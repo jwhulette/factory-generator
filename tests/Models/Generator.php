@@ -18,7 +18,7 @@ class Generator extends Model
     protected $table = 'generator';
 
     /**
-     * The connection assiciated with the model
+     * The connection assiciated with the model.
      *
      * @var string
      */
@@ -30,7 +30,6 @@ class Generator extends Model
      * @var bool
      */
     public $timestamps = false;
-
 
     protected static function newFactory()
     {

@@ -40,7 +40,7 @@ class TestCase extends BaseTestCase
     protected function getPackageProviders($app)
     {
         return [
-            FactoryGeneratorServiceProvider::class
+            FactoryGeneratorServiceProvider::class,
         ];
     }
 
