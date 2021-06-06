@@ -1,13 +1,19 @@
 # Generate Laravel 8+ database factories
 
-<!-- [![Latest Version on Packagist](https://img.shields.io/packagist/v/jwhulette/factory-generator.svg?style=flat-square)](https://packagist.org/packages/jwhulette/factory-generator) -->
+[![Latest Version on Packagist](https://img.shields.io/packagist/v/jwhulette/factory-generator.svg?style=flat-square)](https://packagist.org/packages/jwhulette/factory-generator)
 [![GitHub Tests Action Status](https://img.shields.io/github/workflow/status/jwhulette/factory-generator/run-tests?label=tests)](https://github.com/jwhulette/factory-generator/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![GitHub Code Style Action Status](https://img.shields.io/github/workflow/status/jwhulette/factory-generator/Check%20&%20fix%20styling?label=code%20style)](https://github.com/jwhulette/factory-generator/actions?query=workflow%3A"Check+%26+fix+styling"+branch%3Amain)
-<!-- [![Total Downloads](https://img.shields.io/packagist/dt/jwhulette/factory-generator.svg?style=flat-square)](https://packagist.org/packages/jwhulette/factory-generator) -->
+[![Total Downloads](https://img.shields.io/packagist/dt/jwhulette/factory-generator.svg?style=flat-square)](https://packagist.org/packages/jwhulette/factory-generator)
 
 ---
 
-<img src=".github/images/Factory Generator.png" width="80%" style="display: block;margin-left: auto;margin-right: auto;" />
+<img src=".github/images/Factory Generator.png" width="100%" style="display: block;margin-left: auto;margin-right: auto;" />
+
+---
+
+The package allows you to generate Laravel model factories automatically from your models. 
+
+It uses the model's database connection to retrieve the column information so the package can be used with mulitple databases.
 
 ---
 
@@ -20,7 +26,7 @@ composer require jwhulette/factory-generator
 ```
 You can publish the config file with:
 ```bash
-php artisan vendor:publish --provider="JJwhulette\FactoryGenerator\FactoryGeneratorServiceProvider.php" --tag="package_slug-config"
+php artisan vendor:publish --provider="Jwhulette\FactoryGenerator\FactoryGeneratorServiceProvider.php" --tag="factory-generator-config"
 ```
 
 This is the contents of the published config file:
@@ -91,6 +97,11 @@ return [
 
 ```php
 php artisan factory:generate app/Models/User
+```
+
+To overwrite a single factory
+```php
+php artisan factory:generate app/Models/User --overwrite
 ```
 
 ## Testing

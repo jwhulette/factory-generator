@@ -51,6 +51,22 @@ class FactoryGeneratorCommandTest extends TestCase
             ->assertExitCode(1);
     }
 
+    public function testOverrideOptionwhenFactoryExists()
+    {
+        $model = 'tests/Models/Generator';
+
+        $this->artisan('factory:generate', ['model' => $model]);
+
+        $this->artisan('factory:generate', ['model' => $model, '--overwrite' => true])
+            ->assertExitCode(0);
+
+        $generator = \resolve(Generator::class);
+
+        $factory = $generator::factory()->create();
+
+        $this->assertInstanceOf(Generator::class, $factory);
+    }
+
     public function testCreateFactoryOptionLowerCase()
     {
         File::cleanDirectory(database_path('factories'));
