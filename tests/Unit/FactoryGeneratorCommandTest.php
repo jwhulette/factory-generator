@@ -23,7 +23,7 @@ class FactoryGeneratorCommandTest extends TestCase
     {
         $model = 'tests/Models/Generator';
 
-        $file = database_path('factories/GeneratorFactory.php');
+        $file = database_path('database/factories/GeneratorFactory.php');
 
         File::delete($file);
 

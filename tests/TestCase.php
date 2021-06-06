@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jwhulette\FactoryGenerator\Tests;
 
-use Illuminate\Support\Facades\File;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Jwhulette\FactoryGenerator\FactoryGeneratorServiceProvider;
 
@@ -16,7 +15,7 @@ class TestCase extends BaseTestCase
 
         app()
             ->setBasePath(realpath(__DIR__ . '/..'))
-            ->useDatabasePath(__DIR__);
+            ->useDatabasePath(__DIR__ . '/database');
 
         $this->loadMigrationsFrom(database_path('migrations'));
 
@@ -24,7 +23,7 @@ class TestCase extends BaseTestCase
 
         // Set the factory directory for testing
         $loader = new \Composer\Autoload\ClassLoader();
-        $loader->addPsr4('Database\\Factories\\', __DIR__ . 'factories');
+        $loader->addPsr4('Database\\Factories\\', database_path('factories'));
         $loader->register();
     }
 
@@ -33,7 +32,7 @@ class TestCase extends BaseTestCase
         parent::tearDown();
 
         $file = database_path('factories/GeneratorFactory.php');
-
+        dd($file);
         File::delete($file);
     }
 
