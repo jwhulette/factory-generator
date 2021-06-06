@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Jwhulette\FactoryGenerator\Tests\Models\Generator;
 
 class GeneratorFactory extends Factory
@@ -15,7 +15,7 @@ class GeneratorFactory extends Factory
         return [
             'first_name' => '',
             'last_name' => '',
-            'date_of_birth' => ''
+            'date_of_birth' => '',
         ];
     }
 }
