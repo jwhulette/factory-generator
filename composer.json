@@ -35,8 +35,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Jwhulette\\FactoryGenerator\\Tests\\": "tests",
-            "Database\\Factories\\": "tests/factories"
+            "Jwhulette\\FactoryGenerator\\Tests\\": "tests"
         }
     },
     "scripts": {
