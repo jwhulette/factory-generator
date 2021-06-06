@@ -22,12 +22,11 @@
         "spatie/laravel-package-tools": "^1.4.3"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.17",
+        "friendsofphp/php-cs-fixer": "^3.0",
         "nunomaduro/larastan": "^0.7.6",
         "orchestra/testbench": "^6.18",
         "phpunit/phpunit": "^9.5",
-        "spatie/phpunit-snapshot-assertions": "^4.2",
-        "spatie/ray": "^1.10"
+        "spatie/phpunit-snapshot-assertions": "^4.2"
     },
     "autoload": {
         "psr-4": {
@@ -44,7 +43,7 @@
         "test": "vendor/bin/phpunit",
         "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
         "format": "vendor/bin/php-cs-fixer fix src --allow-risky=yes --config=.php_cs.dist.php",
-        "reset": "vendor/bin/phpunit -d --update-snapshots",
+        "update-snapshots": "vendor/bin/phpunit -d --update-snapshots",
         "tests": [
             "vendor/bin/phpstan analyse --memory-limit=2G",
             "vendor/bin/phpunit"
@@ -59,7 +58,6 @@
                 "Jwhulette\\FactoryGenerator\\FactoryGeneratorServiceProvider"
             ],
             "aliases": {
-                "FactoryGenerator": "Jwhulette\\FactoryGenerator\\FactoryGeneratorFacade"
             }
         }
     },

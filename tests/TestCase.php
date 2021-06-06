@@ -24,9 +24,8 @@ class TestCase extends BaseTestCase
 
         // Set the factory directory for testing
         $loader = new \Composer\Autoload\ClassLoader();
-        $loader->add('Database\Factories', __DIR__ . '/tests/factories');
+        $loader->addPsr4('Database\\Factories\\', __DIR__ . '/factories', true);
         $loader->register();
-        $loader->setUseIncludePath(true);
     }
 
     protected function tearDown(): void
