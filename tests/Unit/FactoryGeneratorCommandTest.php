@@ -15,6 +15,7 @@ class FactoryGeneratorCommandTest extends TestCase
     use MatchesSnapshots;
 
     public string $model = 'tests/Models/Generator';
+
     public string $file = '';
 
     public function setUp(): void
