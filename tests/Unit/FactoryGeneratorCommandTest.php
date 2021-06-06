@@ -116,4 +116,26 @@ class FactoryGeneratorCommandTest extends TestCase
 
         $this->assertInstanceOf(Generator::class, $factory);
     }
+
+    public function testCreateFactoryOptionAddColumnHint()
+    {
+        File::cleanDirectory(database_path('factories'));
+
+        $model = 'tests/Models/Generator';
+
+        $file = database_path('factories/GeneratorFactory.php');
+
+        config()->set('factory-generator.add_column_hint', true);
+
+        $this->artisan('factory:generate', ['model' => $model])
+            ->assertExitCode(0);
+
+        $this->assertMatchesFileSnapshot($file);
+
+        $generator = \resolve(Generator::class);
+
+        $factory = $generator::factory()->create();
+
+        $this->assertInstanceOf(Generator::class, $factory);
+    }
 }

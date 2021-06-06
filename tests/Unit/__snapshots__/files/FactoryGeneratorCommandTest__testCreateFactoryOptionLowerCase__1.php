@@ -13,16 +13,16 @@ class GeneratorFactory extends Factory
     public function definition()
     {
         return [
-            'first_name' => '',
-            'last_name' => '',
-            'date_of_birth' => '',
-            'photo' => '',
-            'confirmed' => '',
-            'name' => '',
-            'amount' => '',
-            'amountdouble' => '',
-            'amountfloat' => '',
-            'sunrise' => ''
+            'first_name'    => '', 
+            'last_name'     => '', 
+            'date_of_birth' => '', 
+            'photo'         => '', 
+            'confirmed'     => '', 
+            'name'          => '', 
+            'amount'        => '', 
+            'amountdouble'  => '', 
+            'amountfloat'   => '', 
+            'sunrise'       => '',
         ];
     }
 }

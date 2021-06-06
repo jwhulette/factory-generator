@@ -13,7 +13,7 @@ class CreateGeneratorTable extends Migration
     {
         Schema::create('generator', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('first_name');
+            $table->string('first_name', 255);
             $table->string('last_name');
             $table->date('date_of_birth');
             $table->binary('photo');

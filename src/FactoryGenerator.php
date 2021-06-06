@@ -19,8 +19,10 @@ class FactoryGenerator
 
     /**
      * @param string $model
+     *
+     * @return void
      */
-    public function generateFactory(string $model)
+    public function generateFactory(string $model): void
     {
         $classMap = $this->generateClassMap($model);
 
@@ -41,6 +43,13 @@ class FactoryGenerator
         $this->writeFactory($modelName, $stub);
     }
 
+    /**
+     * @param \Illuminate\Database\Eloquent\Model $modelInstance
+     * @param string $modelName
+     * @param string $namespacedModel
+     *
+     * @return string
+     */
     public function renderStub(Model $modelInstance, string $modelName, string $namespacedModel): string
     {
         $stub = $this->getFactoryStub();
@@ -108,11 +117,13 @@ class FactoryGenerator
      */
     public function makeDefinition(Model $model): string
     {
-        $skipColums = Config::get('factory-generator.skip_columns');
+        $skipColums = Config::get('factory-generator.skip_columns', \false);
 
         $definitionConfigs = Config::get('factory-generator.definition');
 
         $columns = $this->getColumns($model);
+
+        $formatPadding = $this->getFormatPadding($columns);
 
         $definition = '';
 
@@ -120,21 +131,118 @@ class FactoryGenerator
         foreach ($columns as $column) {
             $name = $column->getName();
 
-            /*
-             * Skip any columns listed in the the skip columns configuration array
-             */
+            /* Skip any columns listed in the the skip columns configuration array */
             if (\in_array($name, $skipColums)) {
                 continue;
             }
 
             $columnName = $this->formatColumnName($name);
             $columnDefinition = $this->getDefinition($column, $definitionConfigs);
+            $columnHint = $this->addDefinitionHint($column, $definitionConfigs);
 
             $definition .= '        ';
-            $definition .= "    '$columnName' => $columnDefinition,\n";
+            $definition .= \sprintf(
+                "    %s => %s, %s\n",
+                str_pad("'$columnName'", $formatPadding + 2, " "),
+                $columnDefinition,
+                $columnHint
+            );
         }
 
-        return Str::of($definition)->trim()->rtrim(',')->__toString();
+        return Str::of($definition)->trim()->__toString();
+    }
+
+    /**
+     * @param array $columns
+     *
+     * @return int
+     */
+    protected function getFormatPadding(array $columns): int
+    {
+        uksort($columns, function ($a, $b) {
+            return strlen($a) - strlen($b);
+        });
+
+        $items = collect($columns);
+
+        $last = $items->last();
+
+        return \strlen($last->getName());
+    }
+
+    /**
+     * @param \Doctrine\DBAL\Schema\Column $column
+     * @param array $definitionConfigs
+     *
+     * @return string
+     */
+    protected function addDefinitionHint(Column $column, array $definitionConfigs): string
+    {
+        if (Config::get('factory-generator.add_column_hint', \false) === true) {
+            $columnType = $column->getType()->getName();
+            $columnHint = '// Type: ' . Str::title($columnType);
+
+            $columnNullable = Str::title($column->getNotNull() ? 'true' : 'false');
+            $columnHint .= ' | Nullable: ' . $columnNullable;
+
+            $columnHint .= $this->getColumnLength($column, $columnType);
+            $columnHint .= $this->getColumnDefault($column);
+            $columnHint .= $this->getNumericHint($column, $columnType);
+
+            return $columnHint;
+        }
+
+        return '';
+    }
+
+    /**
+     * @param \Doctrine\DBAL\Schema\Column $column
+     *
+     * @return string
+     */
+    protected function getColumnDefault(Column $column): string
+    {
+        $columnDefault = $column->getDefault();
+        if (\is_null($columnDefault) === \false) {
+            return ' | Default: ' . $columnDefault;
+        }
+
+        return '';
+    }
+
+    /**
+     * @param \Doctrine\DBAL\Schema\Column $column
+     * @param string $columnType
+     *
+     * @return string
+     */
+    protected function getColumnLength(Column $column, string $columnType): string
+    {
+        if (Str::contains($columnType, ['string', 'binary']) === \false) {
+            return '';
+        }
+
+        $length = $column->getLength() ?? 'NA';
+
+        return ' | Length: ' . $length;
+    }
+
+    /**
+     * @param \Doctrine\DBAL\Schema\Column $column
+     * @param string $columnType
+     *
+     * @return string
+     */
+    protected function getNumericHint(Column $column, string $columnType): string
+    {
+        if (Str::contains($columnType, ['decimal', 'float']) === \false) {
+            return '';
+        }
+
+        $columnPrecision = $column->getPrecision();
+        $columnScale = $column->getScale();
+
+        return '|Precision: ' . $columnPrecision . '|Scale: ' . $columnScale;
     }
 
     /**
@@ -168,7 +276,7 @@ class FactoryGenerator
      */
     public function formatColumnName(string $columnName): string
     {
-        if (Config::get('factory-generator.lower_case_column')) {
+        if (Config::get('factory-generator.lower_case_column', \false)) {
             return Str::of($columnName)->lower()->__toString();
         }
 
