@@ -142,7 +142,7 @@ class FactoryGenerator
 
             $definition .= '        ';
             $definition .= \sprintf(
-                "    %s => %s, %s\n",
+                "    %s => %s,%s\n",
                 str_pad("'$columnName'", $formatPadding + 2, ' '),
                 $columnDefinition,
                 $columnHint
