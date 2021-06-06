@@ -21,11 +21,6 @@ class TestCase extends BaseTestCase
         $this->loadMigrationsFrom(database_path('migrations'));
 
         $this->artisan('migrate');
-
-        // Set the factory directory for testing
-        $loader = new \Composer\Autoload\ClassLoader();
-        $loader->addPsr4('Database\\Factories\\', __DIR__ . '/factories', true);
-        $loader->register();
     }
 
     protected function tearDown(): void
