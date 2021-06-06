@@ -180,7 +180,7 @@ class FactoryGenerator
     {
         if (Config::get('factory-generator.add_column_hint', \false) === true) {
             $columnType = $column->getType()->getName();
-            $columnHint = '// Type: ' . Str::title($columnType);
+            $columnHint = ' // Type: ' . Str::title($columnType);
 
             $columnNullable = Str::title($column->getNotNull() ? 'true' : 'false');
             $columnHint .= ' | Nullable: ' . $columnNullable;
