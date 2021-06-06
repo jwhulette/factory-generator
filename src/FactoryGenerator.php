@@ -242,7 +242,7 @@ class FactoryGenerator
         $columnPrecision = $column->getPrecision();
         $columnScale = $column->getScale();
 
-        return '|Precision: ' . $columnPrecision . '|Scale: ' . $columnScale;
+        return '|Precision: ' . $columnPrecision . ' | Scale: ' . $columnScale;
     }
 
     /**
