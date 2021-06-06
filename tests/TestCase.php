@@ -30,10 +30,6 @@ class TestCase extends BaseTestCase
     protected function tearDown(): void
     {
         parent::tearDown();
-
-        $file = database_path('factories/GeneratorFactory.php');
-        dd($file);
-        File::delete($file);
     }
 
     protected function getPackageProviders($app)

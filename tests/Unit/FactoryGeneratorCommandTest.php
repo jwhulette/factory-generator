@@ -14,23 +14,31 @@ class FactoryGeneratorCommandTest extends TestCase
 {
     use MatchesSnapshots;
 
+    public string $model = 'tests/Models/Generator';
+    public string $file = '';
+
     public function setUp(): void
     {
         parent::setUp();
+
+        $this->file = database_path('factories/GeneratorFactory.php');
+    }
+
+    public function tearDown(): void
+    {
+        parent::tearDown();
+
+        $file = database_path('factories/GeneratorFactory.php');
+
+        File::delete($file);
     }
 
     public function testCreateNewFactory()
     {
-        $model = 'tests/Models/Generator';
-
-        $file = database_path('database/factories/GeneratorFactory.php');
-
-        File::delete($file);
-
-        $this->artisan('factory:generate', ['model' => $model])
+        $this->artisan('factory:generate', ['model' => $this->model])
             ->assertExitCode(0);
 
-        $this->assertMatchesFileSnapshot($file);
+        $this->assertMatchesFileSnapshot($this->file);
 
         $generator = \resolve(Generator::class);
 
@@ -43,21 +51,17 @@ class FactoryGeneratorCommandTest extends TestCase
     {
         $this->expectException(FactoryGeneratorException::class);
 
-        $model = 'tests/Models/Generator';
+        $this->artisan('factory:generate', ['model' => $this->model]);
 
-        $this->artisan('factory:generate', ['model' => $model]);
-
-        $this->artisan('factory:generate', ['model' => $model])
+        $this->artisan('factory:generate', ['model' => $this->model])
             ->assertExitCode(1);
     }
 
     public function testOverrideOptionwhenFactoryExists()
     {
-        $model = 'tests/Models/Generator';
+        $this->artisan('factory:generate', ['model' => $this->model]);
 
-        $this->artisan('factory:generate', ['model' => $model]);
-
-        $this->artisan('factory:generate', ['model' => $model, '--overwrite' => true])
+        $this->artisan('factory:generate', ['model' => $this->model, '--overwrite' => true])
             ->assertExitCode(0);
 
         $generator = \resolve(Generator::class);
@@ -69,18 +73,12 @@ class FactoryGeneratorCommandTest extends TestCase
 
     public function testCreateFactoryOptionLowerCase()
     {
-        File::cleanDirectory(database_path('factories'));
-
-        $model = 'tests/Models/Generator';
-
-        $file = database_path('factories/GeneratorFactory.php');
-
         config()->set('factory-generator.lower_case_column', true);
 
-        $this->artisan('factory:generate', ['model' => $model])
+        $this->artisan('factory:generate', ['model' => $this->model])
             ->assertExitCode(0);
 
-        $this->assertMatchesFileSnapshot($file);
+        $this->assertMatchesFileSnapshot($this->file);
 
         $generator = \resolve(Generator::class);
 
@@ -91,18 +89,12 @@ class FactoryGeneratorCommandTest extends TestCase
 
     public function testCreateFactoryOptionSetNullDefault()
     {
-        File::cleanDirectory(database_path('factories'));
-
-        $model = 'tests/Models/Generator';
-
-        $file = database_path('factories/GeneratorFactory.php');
-
         config()->set('factory-generator.definition.set_null_default', true);
 
-        $this->artisan('factory:generate', ['model' => $model])
+        $this->artisan('factory:generate', ['model' => $this->model])
             ->assertExitCode(0);
 
-        $this->assertMatchesFileSnapshot($file);
+        $this->assertMatchesFileSnapshot($this->file);
 
         $generator = \resolve(Generator::class);
 
@@ -113,18 +105,12 @@ class FactoryGeneratorCommandTest extends TestCase
 
     public function testCreateFactoryOptionSetDate()
     {
-        File::cleanDirectory(database_path('factories'));
-
-        $model = 'tests/Models/Generator';
-
-        $file = database_path('factories/GeneratorFactory.php');
-
         config()->set('factory-generator.definition.set_date_now', true);
 
-        $this->artisan('factory:generate', ['model' => $model])
+        $this->artisan('factory:generate', ['model' => $this->model])
             ->assertExitCode(0);
 
-        $this->assertMatchesFileSnapshot($file);
+        $this->assertMatchesFileSnapshot($this->file);
 
         $generator = \resolve(Generator::class);
 
@@ -135,18 +121,12 @@ class FactoryGeneratorCommandTest extends TestCase
 
     public function testCreateFactoryOptionAddColumnHint()
     {
-        File::cleanDirectory(database_path('factories'));
-
-        $model = 'tests/Models/Generator';
-
-        $file = database_path('factories/GeneratorFactory.php');
-
         config()->set('factory-generator.add_column_hint', true);
 
-        $this->artisan('factory:generate', ['model' => $model])
+        $this->artisan('factory:generate', ['model' => $this->model])
             ->assertExitCode(0);
 
-        $this->assertMatchesFileSnapshot($file);
+        $this->assertMatchesFileSnapshot($this->file);
 
         $generator = \resolve(Generator::class);
 
