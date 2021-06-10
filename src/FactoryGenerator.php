@@ -24,6 +24,11 @@ class FactoryGenerator
      */
     public function generateFactory(string $model): void
     {
+        // Swap path seperators
+        $model = Str::replace('\\', '/', $model);
+        // Remove extension
+        $model = Str::replace('.php', '', $model);
+
         $classMap = $this->generateClassMap($model);
 
         $namespacedModel = \key($classMap);

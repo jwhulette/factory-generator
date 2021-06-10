@@ -135,4 +135,20 @@ class FactoryGeneratorCommandTest extends TestCase
 
         $this->assertInstanceOf(Generator::class, $factory);
     }
+
+    public function testCreateNewFactoryWithWindowsPath()
+    {
+        $model = 'tests\Models\Generator.php';
+
+        $this->artisan('factory:generate', ['model' => $model])
+            ->assertExitCode(0);
+
+        $this->assertMatchesFileSnapshot($this->file);
+
+        $generator = \resolve(Generator::class);
+
+        $factory = $generator::factory()->create();
+
+        $this->assertInstanceOf(Generator::class, $factory);
+    }
 }
