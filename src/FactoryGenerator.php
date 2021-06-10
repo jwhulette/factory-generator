@@ -381,7 +381,6 @@ class FactoryGenerator
         return $schema->listTableColumns($table, $database);
     }
 
-
     /**
      * @param string $model
      *
