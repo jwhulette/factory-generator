@@ -381,6 +381,7 @@ class FactoryGenerator
         return $schema->listTableColumns($table, $database);
     }
 
+
     /**
      * @param string $model
      *
@@ -390,6 +391,12 @@ class FactoryGenerator
     {
         $path = dirname(base_path($model));
 
-        return ClassMapGenerator::createMap($path);
+        $classMap = collect(ClassMapGenerator::createMap($path));
+
+        return $classMap->filter(function ($item, $key) use ($model) {
+            if (Str::contains($item, $model)) {
+                return $item;
+            }
+        })->toArray();
     }
 }
