@@ -153,18 +153,18 @@ class FactoryGenerator
     }
 
     /**
-     * Search array case insensitive
+     * Search array case insensitive.
      *
      * @param string $needle
      * @param array $haystack
      *
-     * @return boolean
+     * @return bool
      */
     protected function in_arrayi(string $needle, array $haystack): bool
     {
         return in_array(strtolower($needle), array_map('strtolower', $haystack));
     }
-    
+
     /**
      * @param array $columns
      *
