@@ -132,7 +132,7 @@ class FactoryGenerator
             $name = $column->getName();
 
             /* Skip any columns listed in the the skip columns configuration array */
-            if (\in_array($name, $skipColums)) {
+            if ($this->in_arrayi($name, $skipColums)) {
                 continue;
             }
 
@@ -152,6 +152,19 @@ class FactoryGenerator
         return Str::of($definition)->trim()->__toString();
     }
 
+    /**
+     * Search array case insensitive
+     *
+     * @param string $needle
+     * @param array $haystack
+     *
+     * @return boolean
+     */
+    protected function in_arrayi(string $needle, array $haystack): bool
+    {
+        return in_array(strtolower($needle), array_map('strtolower', $haystack));
+    }
+    
     /**
      * @param array $columns
      *
@@ -182,7 +195,7 @@ class FactoryGenerator
             $columnType = $column->getType()->getName();
             $columnHint = ' // Type: ' . Str::title($columnType);
 
-            $columnNullable = Str::title($column->getNotNull() ? 'true' : 'false');
+            $columnNullable = Str::title($column->getNotNull() ? 'false' : 'true');
             $columnHint .= ' | Nullable: ' . $columnNullable;
 
             $columnHint .= $this->getColumnLength($column, $columnType);
