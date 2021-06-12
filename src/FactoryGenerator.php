@@ -396,7 +396,6 @@ class FactoryGenerator
     }
 
     /**
-     *
      * @param \Doctrine\DBAL\Schema\AbstractSchemaManager $schema
      *
      * @return void
