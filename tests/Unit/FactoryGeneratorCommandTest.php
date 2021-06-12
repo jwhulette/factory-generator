@@ -29,6 +29,11 @@ class FactoryGeneratorCommandTest extends TestCase
     {
         parent::tearDown();
 
+        $this->deleteTestFile();
+    }
+
+    protected function deleteTestFile(): void
+    {
         $file = database_path('factories/GeneratorFactory.php');
 
         File::delete($file);
@@ -50,8 +55,6 @@ class FactoryGeneratorCommandTest extends TestCase
 
     public function testErrorWhenFactoryExists()
     {
-        $this->expectException(FactoryGeneratorException::class);
-
         $this->artisan('factory:generate', ['model' => $this->model]);
 
         $this->artisan('factory:generate', ['model' => $this->model])
@@ -125,6 +128,22 @@ class FactoryGeneratorCommandTest extends TestCase
         config()->set('factory-generator.add_column_hint', true);
 
         $this->artisan('factory:generate', ['model' => $this->model])
+            ->assertExitCode(0);
+
+        $this->assertMatchesFileSnapshot($this->file);
+
+        $generator = \resolve(Generator::class);
+
+        $factory = $generator::factory()->create();
+
+        $this->assertInstanceOf(Generator::class, $factory);
+    }
+
+    public function testCreateNewFactoryWithWindowsPath()
+    {
+        $model = 'tests\Models\Generator.php';
+
+        $this->artisan('factory:generate', ['model' => $model])
             ->assertExitCode(0);
 
         $this->assertMatchesFileSnapshot($this->file);

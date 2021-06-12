@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Composer\Autoload\ClassMapGenerator;
+use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Jwhulette\FactoryGenerator\Exceptions\FactoryGeneratorException;
 
 class FactoryGenerator
@@ -20,10 +21,15 @@ class FactoryGenerator
     /**
      * @param string $model
      *
-     * @return void
+     * @return string
      */
-    public function generateFactory(string $model): void
+    public function generateFactory(string $model): string
     {
+        // Swap path seperators
+        $model = Str::replace('\\', '/', $model);
+        // Remove extension
+        $model = Str::replace('.php', '', $model);
+
         $classMap = $this->generateClassMap($model);
 
         $namespacedModel = \key($classMap);
@@ -41,6 +47,8 @@ class FactoryGenerator
         $stub = $this->renderStub($modelInstance, $modelName, $namespacedModel);
 
         $this->writeFactory($modelName, $stub);
+
+        return $modelName;
     }
 
     /**
@@ -372,13 +380,37 @@ class FactoryGenerator
 
         $schema = $model->getConnection()->getDoctrineSchemaManager();
 
+        $this->registerCustomMappings($schema);
+
         $database = null;
 
         if (strpos($table, '.')) {
             [$database, $table] = explode('.', $table);
         }
 
-        return $schema->listTableColumns($table, $database);
+        try {
+            return $schema->listTableColumns($table, $database);
+        } catch (\Throwable $th) {
+            throw $th;
+        }
+    }
+
+    /**
+     * @param \Doctrine\DBAL\Schema\AbstractSchemaManager $schema
+     *
+     * @return void
+     */
+    protected function registerCustomMappings(AbstractSchemaManager $schema)
+    {
+        $databasePlatform = $schema->getDatabasePlatform();
+
+        $platformName = $databasePlatform->getName();
+
+        $customTypes = Config::get("factory-generator.custom_db_types.{$platformName}", []);
+
+        foreach ($customTypes as $typeName => $doctrineTypeName) {
+            $databasePlatform->registerDoctrineTypeMapping($typeName, $doctrineTypeName);
+        }
     }
 
     /**
@@ -388,7 +420,7 @@ class FactoryGenerator
      */
     public function generateClassMap(string $model): array
     {
-        $path = dirname(base_path($model));
+        $path = dirname(\base_path($model));
 
         $classMap = collect(ClassMapGenerator::createMap($path));
 

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Jwhulette\FactoryGenerator\Tests;
 
+use Composer\Autoload\ClassLoader;
 use Orchestra\Testbench\TestCase as BaseTestCase;
 use Jwhulette\FactoryGenerator\FactoryGeneratorServiceProvider;
 
@@ -22,7 +23,7 @@ class TestCase extends BaseTestCase
         $this->artisan('migrate');
 
         // Set the factory directory for testing
-        $loader = new \Composer\Autoload\ClassLoader();
+        $loader = new ClassLoader();
         $loader->addPsr4('Database\\Factories\\', database_path('factories'));
         $loader->register();
     }
