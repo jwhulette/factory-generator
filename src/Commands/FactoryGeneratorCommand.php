@@ -23,8 +23,35 @@ class FactoryGeneratorCommand extends Command
             Config::set('factory-generator.overwrite', true);
         }
 
-        (new FactoryGenerator())->generateFactory($model);
+        try {
+            $modelName = (new FactoryGenerator())->generateFactory($model);
 
-        return 0;
+            $this->info($modelName . 'Factory created!');
+
+            return 0;
+        } catch (\Throwable $th) {
+            $this->alert(' The following error occurred. ');
+            $this->warn($th->getMessage());
+            $this->newLine();
+            $this->info($this->errorHints($th->getMessage()));
+            $this->newLine();
+
+            return 1;
+        }
+    }
+
+    /**
+     *
+     * @param string $errorMessage
+     *
+     * @return string
+     */
+    protected function errorHints(string $errorMessage): string
+    {
+        if (Str::contains($errorMessage, 'Unknown database type')) {
+            return 'Set a custom type in the custom_db_types array, in the factory-generator configration';
+        }
+
+        return '';
     }
 }

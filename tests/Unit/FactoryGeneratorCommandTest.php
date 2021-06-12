@@ -29,6 +29,11 @@ class FactoryGeneratorCommandTest extends TestCase
     {
         parent::tearDown();
 
+        $this->deleteTestFile();
+    }
+
+    protected function deleteTestFile(): void
+    {
         $file = database_path('factories/GeneratorFactory.php');
 
         File::delete($file);
@@ -50,8 +55,6 @@ class FactoryGeneratorCommandTest extends TestCase
 
     public function testErrorWhenFactoryExists()
     {
-        $this->expectException(FactoryGeneratorException::class);
-
         $this->artisan('factory:generate', ['model' => $this->model]);
 
         $this->artisan('factory:generate', ['model' => $this->model])
