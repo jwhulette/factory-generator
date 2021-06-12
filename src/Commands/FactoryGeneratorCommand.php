@@ -41,7 +41,6 @@ class FactoryGeneratorCommand extends Command
     }
 
     /**
-     *
      * @param string $errorMessage
      *
      * @return string
