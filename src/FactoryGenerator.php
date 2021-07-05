@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jwhulette\FactoryGenerator;
 
 use Illuminate\Support\Str;
+use Illuminate\Console\Command;
 use Doctrine\DBAL\Schema\Column;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Config;
@@ -13,7 +14,7 @@ use Composer\Autoload\ClassMapGenerator;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Jwhulette\FactoryGenerator\Exceptions\FactoryGeneratorException;
 
-class FactoryGenerator
+class FactoryGenerator extends Command
 {
     protected const DATETIME_FIELDS = ['date', 'datetimetz', 'datetime'];
     protected const NUMERIC_FIELDS = ['integer', 'bigint', 'smallint'];
@@ -23,12 +24,9 @@ class FactoryGenerator
      *
      * @return string
      */
-    public function generateFactory(string $model): string
+    protected function generateFactory(string $model): string
     {
-        // Swap path seperators
-        $model = Str::replace('\\', '/', $model);
-        // Remove extension
-        $model = Str::replace('.php', '', $model);
+        $this->info('Generating factory...');
 
         $classMap = $this->generateClassMap($model);
 
@@ -58,11 +56,13 @@ class FactoryGenerator
      *
      * @return string
      */
-    public function renderStub(Model $modelInstance, string $modelName, string $namespacedModel): string
+    protected function renderStub(Model $modelInstance, string $modelName, string $namespacedModel): string
     {
         $stub = $this->getFactoryStub();
 
         $stub = $this->replacePlaceholders($modelName, $namespacedModel, $stub);
+
+        $this->info('Creating model defintions...');
 
         return $this->createDefinition($modelInstance, $stub);
     }
@@ -71,7 +71,7 @@ class FactoryGenerator
      * @param string $model
      * @param string $stub
      */
-    public function writeFactory(string $model, string $stub): void
+    protected function writeFactory(string $model, string $stub): void
     {
         $path = $this->getFactoryFilePath($model);
 
@@ -84,7 +84,7 @@ class FactoryGenerator
      *
      * @return string
      */
-    public function createDefinition(Model $modelInstance, string $stub): string
+    protected function createDefinition(Model $modelInstance, string $stub): string
     {
         $definition = $this->makeDefinition($modelInstance);
 
@@ -98,7 +98,7 @@ class FactoryGenerator
      *
      * @return string
      */
-    public function replacePlaceholders(string $model, string $namespacedModel, string $sub): string
+    protected function replacePlaceholders(string $model, string $namespacedModel, string $sub): string
     {
         $replace = $this->replaceModelName($sub, $model);
 
@@ -113,7 +113,7 @@ class FactoryGenerator
      *
      * @return string
      */
-    public function replaceDefinition(string $stub, string $definition): string
+    protected function replaceDefinition(string $stub, string $definition): string
     {
         return Str::replace('{{ definition }}', $definition, $stub);
     }
@@ -123,7 +123,7 @@ class FactoryGenerator
      *
      * @return string
      */
-    public function makeDefinition(Model $model): string
+    protected function makeDefinition(Model $model): string
     {
         $skipColums = Config::get('factory-generator.skip_columns', \false);
         $definitionConfigs = Config::get('factory-generator.definition');
@@ -153,7 +153,7 @@ class FactoryGenerator
                 $columnHint = $this->addDefinitionHint($column, $definitionConfigs);
             }
 
-            $columnDefinition = $this->getDefinition($column, $definitionConfigs);
+            $columnDefinition = $this->getModelDefinition($column, $definitionConfigs);
 
             /* Create the defination */
             $definition .= '        ';
@@ -251,10 +251,7 @@ class FactoryGenerator
             return '';
         }
 
-        $columnPrecision = $column->getPrecision();
-        $columnScale = $column->getScale();
-
-        return '|Precision: ' . $columnPrecision . ' | Scale: ' . $columnScale;
+        return '|Precision: ' . $column->getPrecision() . ' | Scale: ' . $column->getScale();
     }
 
     /**
@@ -262,7 +259,7 @@ class FactoryGenerator
      *
      * @return string|int
      */
-    public function getDefinition(Column $column, array $definitionConfigs): string | int
+    protected function getModelDefinition(Column $column, array $definitionConfigs): string | int
     {
         if ($definitionConfigs['set_null_default'] === true && $column->getNotNull() === false) {
             return 'null';
@@ -286,7 +283,7 @@ class FactoryGenerator
      *
      * @return string
      */
-    public function formatColumnName(string $columnName): string
+    protected function formatColumnName(string $columnName): string
     {
         return Str::of($columnName)->lower()->__toString();
     }
@@ -295,7 +292,7 @@ class FactoryGenerator
      * @param string $name
      * @return string
      */
-    public function getFactoryFilePath(string $name): string
+    protected function getFactoryFilePath(string $name): string
     {
         $factoryDirectory = database_path('factories');
 
@@ -310,7 +307,7 @@ class FactoryGenerator
      *
      * @return string
      */
-    public function replaceModelNamespace(string $namespacedModel, string $stub): string
+    protected function replaceModelNamespace(string $namespacedModel, string $stub): string
     {
         return Str::replace('{{ namespacedModel }}', $namespacedModel, $stub);
     }
@@ -321,7 +318,7 @@ class FactoryGenerator
      *
      * @return string
      */
-    public function replaceFactoryNamespace(string $stub, string $path): string
+    protected function replaceFactoryNamespace(string $stub, string $path): string
     {
         return Str::replace('{{ factoryNamespace }}', $path, $stub);
     }
@@ -332,7 +329,7 @@ class FactoryGenerator
      *
      * @return string
      */
-    public function replaceModelName(string $stub, string $model): string
+    protected function replaceModelName(string $stub, string $model): string
     {
         return Str::replace('{{ model }}', $model, $stub);
     }
@@ -342,7 +339,7 @@ class FactoryGenerator
      *
      * @return string
      */
-    public function makeModelName(Model $model): string
+    protected function makeModelName(Model $model): string
     {
         $table = $model->getTable();
 
@@ -354,7 +351,7 @@ class FactoryGenerator
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function makeModel(array $classMap): Model
+    protected function makeModel(array $classMap): Model
     {
         return  \resolve(\key($classMap));
     }
@@ -362,7 +359,7 @@ class FactoryGenerator
     /**
      * @return string
      */
-    public function getFactoryStub(): string
+    protected function getFactoryStub(): string
     {
         $stub = __DIR__ . '/stubs/factory.stub';
 
@@ -374,7 +371,7 @@ class FactoryGenerator
      *
      * @return array<\Doctrine\DBAL\Schema\Column>
      */
-    public function getColumns(Model $model): array
+    protected function getColumns(Model $model): array
     {
         $table = $model->getConnection()->getTablePrefix() . $model->getTable();
 
@@ -418,13 +415,13 @@ class FactoryGenerator
      *
      * @return array
      */
-    public function generateClassMap(string $model): array
+    protected function generateClassMap(string $model): array
     {
         $path = \dirname(\base_path($model));
 
         $classMap = collect(ClassMapGenerator::createMap($path));
 
-        return $classMap->filter(function ($item, $key) use ($model) {
+        return $classMap->filter(function ($item) use ($model) {
             if (Str::contains($item, $model)) {
                 return $item;
             }

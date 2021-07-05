@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace Jwhulette\FactoryGenerator\Commands;
 
 use Illuminate\Support\Str;
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Jwhulette\FactoryGenerator\FactoryGenerator;
 
-class FactoryGeneratorCommand extends Command
+class FactoryGeneratorCommand extends FactoryGenerator
 {
     public $signature = 'factory:generate {model} {--overwrite : Overwrite an existing model}';
 
@@ -19,19 +18,21 @@ class FactoryGeneratorCommand extends Command
     {
         $model = $this->argument('model');
 
+        $model = $this->cleanInput($model);
+
         if ($this->option('overwrite') === true) {
             Config::set('factory-generator.overwrite', true);
         }
 
         try {
-            $modelName = (new FactoryGenerator())->generateFactory($model);
+            $modelName = $this->generateFactory($model);
 
             $this->info($modelName . 'Factory created!');
 
             return 0;
         } catch (\Throwable $th) {
             $this->alert(' The following error occurred. ');
-            $this->warn($th->getMessage());
+            $this->error($th->getMessage());
             $this->newLine();
             $this->info($this->errorHints($th->getMessage()));
             $this->newLine();
@@ -52,5 +53,17 @@ class FactoryGeneratorCommand extends Command
         }
 
         return '';
+    }
+
+    /**
+     *
+     * @param string $model
+     *
+     * @return string
+     */
+    protected function cleanInput(string $model): string
+    {
+        /* Swap path seperators && Remove extension */
+        return Str::of($model)->replace('\\', '/')->replace('.php', '')->__toString();
     }
 }
