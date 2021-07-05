@@ -126,28 +126,36 @@ class FactoryGenerator
     public function makeDefinition(Model $model): string
     {
         $skipColums = Config::get('factory-generator.skip_columns', \false);
-
         $definitionConfigs = Config::get('factory-generator.definition');
+        $addColumnHint = Config::get('factory-generator.add_column_hint', \false);
+        $formatColumnName = Config::get('factory-generator.lower_case_column', \false);
 
         $columns = $this->getColumns($model);
-
         $formatPadding = $this->getFormatPadding($columns);
 
+        $columnHint = '';
         $definition = '';
 
         /** @var \Doctrine\DBAL\Schema\Column $column */
         foreach ($columns as $column) {
-            $name = $column->getName();
+            $columnName = $column->getName();
 
             /* Skip any columns listed in the the skip columns configuration array */
-            if (\in_array($name, $skipColums)) {
+            if (\in_array($columnName, $skipColums)) {
                 continue;
             }
 
-            $columnName = $this->formatColumnName($name);
-            $columnDefinition = $this->getDefinition($column, $definitionConfigs);
-            $columnHint = $this->addDefinitionHint($column, $definitionConfigs);
+            if ($formatColumnName === true) {
+                $columnName = $this->formatColumnName($columnName);
+            }
 
+            if ($addColumnHint === true) {
+                $columnHint = $this->addDefinitionHint($column, $definitionConfigs);
+            }
+
+            $columnDefinition = $this->getDefinition($column, $definitionConfigs);
+
+            /* Create the defination */
             $definition .= '        ';
             $definition .= \sprintf(
                 "    %s => %s,%s\n",
@@ -167,13 +175,12 @@ class FactoryGenerator
      */
     protected function getFormatPadding(array $columns): int
     {
+        /* Get the longest column */
         uksort($columns, function ($a, $b) {
             return strlen($a) - strlen($b);
         });
 
-        $items = collect($columns);
-
-        $last = $items->last();
+        $last = collect($columns)->last();
 
         return \strlen($last->getName());
     }
@@ -186,21 +193,17 @@ class FactoryGenerator
      */
     protected function addDefinitionHint(Column $column, array $definitionConfigs): string
     {
-        if (Config::get('factory-generator.add_column_hint', \false) === true) {
-            $columnType = $column->getType()->getName();
-            $columnHint = ' // Type: ' . Str::title($columnType);
+        $columnType = $column->getType()->getName();
+        $columnHint = ' // Type: ' . Str::title($columnType);
 
-            $columnNullable = Str::title($column->getNotNull() ? 'true' : 'false');
-            $columnHint .= ' | Nullable: ' . $columnNullable;
+        $columnNullable = Str::title($column->getNotNull() ? 'true' : 'false');
+        $columnHint .= ' | Nullable: ' . $columnNullable;
 
-            $columnHint .= $this->getColumnLength($column, $columnType);
-            $columnHint .= $this->getColumnDefault($column);
-            $columnHint .= $this->getNumericHint($column, $columnType);
+        $columnHint .= $this->getColumnLength($column, $columnType);
+        $columnHint .= $this->getColumnDefault($column);
+        $columnHint .= $this->getNumericHint($column, $columnType);
 
-            return $columnHint;
-        }
-
-        return '';
+        return $columnHint;
     }
 
     /**
@@ -211,6 +214,7 @@ class FactoryGenerator
     protected function getColumnDefault(Column $column): string
     {
         $columnDefault = $column->getDefault();
+
         if (\is_null($columnDefault) === \false) {
             return ' | Default: ' . $columnDefault;
         }
@@ -284,11 +288,7 @@ class FactoryGenerator
      */
     public function formatColumnName(string $columnName): string
     {
-        if (Config::get('factory-generator.lower_case_column', \false)) {
-            return Str::of($columnName)->lower()->__toString();
-        }
-
-        return $columnName;
+        return Str::of($columnName)->lower()->__toString();
     }
 
     /**
@@ -420,7 +420,7 @@ class FactoryGenerator
      */
     public function generateClassMap(string $model): array
     {
-        $path = dirname(\base_path($model));
+        $path = \dirname(\base_path($model));
 
         $classMap = collect(ClassMapGenerator::createMap($path));
 
