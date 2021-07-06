@@ -56,7 +56,6 @@ class FactoryGeneratorCommand extends FactoryGenerator
     }
 
     /**
-     *
      * @param string $model
      *
      * @return string
