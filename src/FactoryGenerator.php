@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Jwhulette\FactoryGenerator;
 
-use Illuminate\Support\Str;
-use Doctrine\DBAL\Schema\Column;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Database\Eloquent\Model;
 use Composer\Autoload\ClassMapGenerator;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
+use Doctrine\DBAL\Schema\Column;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Str;
 use Jwhulette\FactoryGenerator\Exceptions\FactoryGeneratorException;
 
 class FactoryGenerator
 {
     protected const DATETIME_FIELDS = ['date', 'datetimetz', 'datetime'];
+
     protected const NUMERIC_FIELDS = ['integer', 'bigint', 'smallint'];
 
     /**
@@ -41,7 +42,7 @@ class FactoryGenerator
         $factory = $this->getFactoryFilePath($modelName);
 
         if (Config::get('factory-generator.overwrite') === false && File::exists($factory)) {
-            throw new FactoryGeneratorException($modelName . 'Factory already exists');
+            throw new FactoryGeneratorException($modelName.'Factory already exists');
         }
 
         $stub = $this->renderStub($modelInstance, $modelName, $namespacedModel);
@@ -167,9 +168,7 @@ class FactoryGenerator
      */
     protected function getFormatPadding(array $columns): int
     {
-        uksort($columns, function ($a, $b) {
-            return strlen($a) - strlen($b);
-        });
+        uksort($columns, fn ($a, $b) => strlen($a) - strlen($b));
 
         $items = collect($columns);
 
@@ -188,10 +187,10 @@ class FactoryGenerator
     {
         if (Config::get('factory-generator.add_column_hint', \false) === true) {
             $columnType = $column->getType()->getName();
-            $columnHint = ' // Type: ' . Str::title($columnType);
+            $columnHint = ' // Type: '.Str::title($columnType);
 
             $columnNullable = Str::title($column->getNotNull() ? 'true' : 'false');
-            $columnHint .= ' | Nullable: ' . $columnNullable;
+            $columnHint .= ' | Nullable: '.$columnNullable;
 
             $columnHint .= $this->getColumnLength($column, $columnType);
             $columnHint .= $this->getColumnDefault($column);
@@ -212,7 +211,7 @@ class FactoryGenerator
     {
         $columnDefault = $column->getDefault();
         if (\is_null($columnDefault) === \false) {
-            return ' | Default: ' . $columnDefault;
+            return ' | Default: '.$columnDefault;
         }
 
         return '';
@@ -232,7 +231,7 @@ class FactoryGenerator
 
         $length = $column->getLength() ?? 'NA';
 
-        return ' | Length: ' . $length;
+        return ' | Length: '.$length;
     }
 
     /**
@@ -250,7 +249,7 @@ class FactoryGenerator
         $columnPrecision = $column->getPrecision();
         $columnScale = $column->getScale();
 
-        return '|Precision: ' . $columnPrecision . ' | Scale: ' . $columnScale;
+        return '|Precision: '.$columnPrecision.' | Scale: '.$columnScale;
     }
 
     /**
@@ -301,7 +300,7 @@ class FactoryGenerator
 
         File::ensureDirectoryExists($factoryDirectory);
 
-        return $factoryDirectory . '/' . $name . 'Factory.php';
+        return $factoryDirectory.'/'.$name.'Factory.php';
     }
 
     /**
@@ -364,7 +363,7 @@ class FactoryGenerator
      */
     public function getFactoryStub(): string
     {
-        $stub = __DIR__ . '/stubs/factory.stub';
+        $stub = __DIR__.'/stubs/factory.stub';
 
         return File::get($stub);
     }
@@ -376,7 +375,7 @@ class FactoryGenerator
      */
     public function getColumns(Model $model): array
     {
-        $table = $model->getConnection()->getTablePrefix() . $model->getTable();
+        $table = $model->getConnection()->getTablePrefix().$model->getTable();
 
         $schema = $model->getConnection()->getDoctrineSchemaManager();
 
@@ -400,7 +399,7 @@ class FactoryGenerator
      *
      * @return void
      */
-    protected function registerCustomMappings(AbstractSchemaManager $schema)
+    protected function registerCustomMappings(AbstractSchemaManager $schema): void
     {
         $databasePlatform = $schema->getDatabasePlatform();
 
