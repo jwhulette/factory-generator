@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Jwhulette\FactoryGenerator\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Str;
 use Jwhulette\FactoryGenerator\FactoryGenerator;
 
 class FactoryGeneratorCommand extends Command
@@ -26,7 +26,7 @@ class FactoryGeneratorCommand extends Command
         try {
             $modelName = (new FactoryGenerator())->generateFactory($model);
 
-            $this->info($modelName . 'Factory created!');
+            $this->info($modelName.'Factory created!');
 
             return 0;
         } catch (\Throwable $th) {
