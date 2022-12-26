@@ -3,7 +3,25 @@ name: run-tests
 on: [push]
 
 jobs:
+  php-cs-fixer:
+      runs-on: ubuntu-latest
+      steps:
+          - name: Checkout code
+            uses: actions/checkout@v3
+            with:
+                ref: ${{ github.head_ref }}
+
+          - name: Run PHP CS Fixer
+            uses: docker://oskarstark/php-cs-fixer-ga
+            with:
+                args: --config=.php-cs-fixer.dist.php --allow-risky=yes
+
+          - name: Commit changes
+            uses: stefanzweifel/git-auto-commit-action@v4
+            with:
+                commit_message: Fix styling
   test:
+    needs: php-cs-fixer
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
@@ -14,13 +32,18 @@ jobs:
         dependency-version: [prefer-lowest, prefer-stable]
         include:
           - laravel: 9.*
-            testbench: ^7.*
-            larastan: ^2.*
+            testbench: 7.*
+            # larastan: 2.*
           - laravel: 8.*
-            testbench: ^6.23
-            larastan: ^1.*
+            testbench: 6.23
+            # larastan: 1.*
+        exclude:
+          - laravel: 8.*
+            php: 8.1
+          - laravel: 8.*
+            php: 8.2
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout code
@@ -30,21 +53,16 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: bcmath, ctype, curl, dom, fileinfo, json, mbstring, openssl, pcre, pdo, sqlite, pdo_sqlite, tokenizer, xml
+          extensions: curl, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, iconv
           coverage: none
-
-      - name: Setup matchers
-        run: |
-          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
-          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
-          composer update --${{ matrix.stability }} --prefer-dist --no-interaction
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "symfony/console:>=4.3.4" "mockery/mockery:^1.3.2" --no-interaction --no-update
+          composer update --${{ matrix.dependency-version }} --prefer-dist --no-interaction
 
-      - name: Run larastan
-        run: ./vendor/bin/phpstan analyse --memory-limit=2G
+      # - name: Run larastan
+      #   run: ./vendor/bin/phpstan analyse --memory-limit=2G
 
       - name: Execute tests
         run: vendor/bin/phpunit -d --without-creating-snapshots
