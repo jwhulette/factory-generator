@@ -14,8 +14,7 @@ class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        app()
-            ->setBasePath(realpath(__DIR__.'/..'))
+        app()->setBasePath(realpath(__DIR__.'/..'))
             ->useDatabasePath(__DIR__.'/database');
 
         $this->loadMigrationsFrom(database_path('migrations'));

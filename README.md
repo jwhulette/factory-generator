@@ -1,4 +1,4 @@
-# Generate Laravel 8+ database factories
+# Generate Laravel 9+ database factories
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/jwhulette/factory-generator.svg?style=flat-square)](https://packagist.org/packages/jwhulette/factory-generator) [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.0-8892BF.svg?style=flat-square)](https://php.net/) ![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/jwhulette/factory-generator/run-tests.yml?branch=main) [![Total Downloads](https://img.shields.io/packagist/dt/jwhulette/factory-generator.svg?style=flat-square)](https://packagist.org/packages/jwhulette/factory-generator)
 
 ---
@@ -9,7 +9,7 @@
 
 The package allows you to generate Laravel model factories automatically from your models. 
 
-It uses the model's database connection to retrieve the column information so the package can be used with mulitple databases.
+It uses the model's database connection to retrieve the column information so the package can be used with multiple databases.
 
 ---
 
