@@ -27,7 +27,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Add a column hint to the defintion
+    | Add a column hint to the definition
     | @example 'payment' => '', // Type: Float | Nullable: True | Precision: 8 | Scale: 2
     | @example 'first_name' => '', // Type: String | Nullable: True | Length: 255
     |--------------------------------------------------------------------------
@@ -36,14 +36,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Set the defintion based on the column properties
+    | Set the definition based on the column properties
     |--------------------------------------------------------------------------
     */
     'definition' => [
         /*
         |--------------------------------------------------------------------------
         | If the column allows nulls, set the factory column value to null
-        | IMPORTANT: This setting will overide all others
+        | IMPORTANT: This setting will override all others
         |--------------------------------------------------------------------------
         */
         'set_null_default' => false,

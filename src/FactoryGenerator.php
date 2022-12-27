@@ -19,11 +19,6 @@ class FactoryGenerator
 
     protected const NUMERIC_FIELDS = ['integer', 'bigint', 'smallint'];
 
-    /**
-     * @param string $model
-     *
-     * @return string
-     */
     public function generateFactory(string $model): string
     {
         // Swap path separators
@@ -53,13 +48,6 @@ class FactoryGenerator
         return $modelName;
     }
 
-    /**
-     * @param \Illuminate\Database\Eloquent\Model $modelInstance
-     * @param string $modelName
-     * @param string $namespacedModel
-     *
-     * @return string
-     */
     public function renderStub(Model $modelInstance, string $modelName, string $namespacedModel): string
     {
         $stub = $this->getFactoryStub();
@@ -69,10 +57,6 @@ class FactoryGenerator
         return $this->createDefinition($modelInstance, $stub);
     }
 
-    /**
-     * @param string $model
-     * @param string $stub
-     */
     public function writeFactory(string $model, string $stub): void
     {
         $path = $this->getFactoryFilePath($model);
@@ -80,12 +64,6 @@ class FactoryGenerator
         File::put($path, $stub);
     }
 
-    /**
-     * @param \Illuminate\Database\Eloquent\Model $modelInstance
-     * @param string $stub
-     *
-     * @return string
-     */
     public function createDefinition(Model $modelInstance, string $stub): string
     {
         $definition = $this->makeDefinition($modelInstance);
@@ -93,13 +71,6 @@ class FactoryGenerator
         return $this->replaceDefinition($stub, $definition);
     }
 
-    /**
-     * @param string $model
-     * @param string $namespacedModel
-     * @param string $sub
-     *
-     * @return string
-     */
     public function replacePlaceholders(string $model, string $namespacedModel, string $sub): string
     {
         $replace = $this->replaceModelName($sub, $model);
@@ -109,22 +80,11 @@ class FactoryGenerator
         return $this->replaceFactoryNamespace($replace, 'Database\Factories');
     }
 
-    /**
-     * @param string $stub
-     * @param string $definition
-     *
-     * @return string
-     */
     public function replaceDefinition(string $stub, string $definition): string
     {
         return Str::replace('{{ definition }}', $definition, $stub);
     }
 
-    /**
-     * @param \Illuminate\Database\Eloquent\Model $model
-     *
-     * @return string
-     */
     public function makeDefinition(Model $model): string
     {
         /** @var array $skipColumns */
@@ -150,7 +110,7 @@ class FactoryGenerator
 
             $columnName = $this->formatColumnName($name);
             $columnDefinition = $this->getDefinition($column, $definitionConfigs);
-            $columnHint = $this->addDefinitionHint($column, $definitionConfigs);
+            $columnHint = $this->addDefinitionHint($column);
 
             $definition .= '        ';
             $definition .= \sprintf(
@@ -165,7 +125,7 @@ class FactoryGenerator
     }
 
     /**
-     * @param array $columns
+     * @param array<\Doctrine\DBAL\Schema\Column> $columns
      *
      * @return int
      */
@@ -175,18 +135,13 @@ class FactoryGenerator
 
         $items = collect($columns);
 
+        /** @var  \Doctrine\DBAL\Schema\Column $last */
         $last = $items->last();
 
         return \strlen($last->getName());
     }
 
-    /**
-     * @param \Doctrine\DBAL\Schema\Column $column
-     * @param array $definitionConfigs
-     *
-     * @return string
-     */
-    protected function addDefinitionHint(Column $column, array $definitionConfigs): string
+    protected function addDefinitionHint(Column $column): string
     {
         if (Config::get('factory-generator.add_column_hint', \false) === true) {
             $columnType = $column->getType()->getName();
@@ -205,11 +160,6 @@ class FactoryGenerator
         return '';
     }
 
-    /**
-     * @param \Doctrine\DBAL\Schema\Column $column
-     *
-     * @return string
-     */
     protected function getColumnDefault(Column $column): string
     {
         $columnDefault = $column->getDefault();
@@ -220,15 +170,10 @@ class FactoryGenerator
         return '';
     }
 
-    /**
-     * @param \Doctrine\DBAL\Schema\Column $column
-     * @param string $columnType
-     *
-     * @return string
-     */
     protected function getColumnLength(Column $column, string $columnType): string
     {
-        if (Str::contains($columnType, ['string', 'binary']) === \false) {
+        $needles = ['string', 'binary'];
+        if (Str::contains($columnType, $needles) === \false) {
             return '';
         }
 
@@ -237,12 +182,6 @@ class FactoryGenerator
         return ' | Length: '.$length;
     }
 
-    /**
-     * @param \Doctrine\DBAL\Schema\Column $column
-     * @param string $columnType
-     *
-     * @return string
-     */
     protected function getNumericHint(Column $column, string $columnType): string
     {
         if (Str::contains($columnType, ['decimal', 'float']) === \false) {
@@ -255,12 +194,7 @@ class FactoryGenerator
         return '|Precision: '.$columnPrecision.' | Scale: '.$columnScale;
     }
 
-    /**
-     * @param \Doctrine\DBAL\Schema\Column  $column
-     *
-     * @return string|int
-     */
-    public function getDefinition(Column $column, array $definitionConfigs): string | int
+    public function getDefinition(Column $column, array $definitionConfigs): string|int
     {
         if ($definitionConfigs['set_null_default'] === true && $column->getNotNull() === false) {
             return 'null';
@@ -279,11 +213,6 @@ class FactoryGenerator
         return "''";
     }
 
-    /**
-     * @param string $columnName
-     *
-     * @return string
-     */
     public function formatColumnName(string $columnName): string
     {
         if (Config::get('factory-generator.lower_case_column', \false)) {
@@ -293,10 +222,6 @@ class FactoryGenerator
         return $columnName;
     }
 
-    /**
-     * @param string $name
-     * @return string
-     */
     public function getFactoryFilePath(string $name): string
     {
         $factoryDirectory = database_path('factories');
@@ -306,44 +231,21 @@ class FactoryGenerator
         return $factoryDirectory.'/'.$name.'Factory.php';
     }
 
-    /**
-     * @param string $namespacedModel
-     * @param string $stub
-     *
-     * @return string
-     */
     public function replaceModelNamespace(string $namespacedModel, string $stub): string
     {
         return Str::replace('{{ namespacedModel }}', $namespacedModel, $stub);
     }
 
-    /**
-     * @param string $stub
-     * @param string $path
-     *
-     * @return string
-     */
     public function replaceFactoryNamespace(string $stub, string $path): string
     {
         return Str::replace('{{ factoryNamespace }}', $path, $stub);
     }
 
-    /**
-     * @param string $stub
-     * @param string $model
-     *
-     * @return string
-     */
     public function replaceModelName(string $stub, string $model): string
     {
         return Str::replace('{{ model }}', $model, $stub);
     }
 
-    /**
-     * @param \Illuminate\Database\Eloquent\Model $model
-     *
-     * @return string
-     */
     public function makeModelName(Model $model): string
     {
         $table = $model->getTable();
@@ -351,19 +253,11 @@ class FactoryGenerator
         return Str::of($table)->afterLast('.')->camel()->ucfirst()->singular()->__toString();
     }
 
-    /**
-     * @param array $classMap
-     *
-     * @return \Illuminate\Database\Eloquent\Model
-     */
     public function makeModel(array $classMap): Model
     {
         return  \resolve((string) \key($classMap));
     }
 
-    /**
-     * @return string
-     */
     public function getFactoryStub(): string
     {
         $stub = __DIR__.'/stubs/factory.stub';
@@ -397,11 +291,6 @@ class FactoryGenerator
         }
     }
 
-    /**
-     * @param \Doctrine\DBAL\Schema\AbstractSchemaManager $schema
-     *
-     * @return void
-     */
     protected function registerCustomMappings(AbstractSchemaManager $schema): void
     {
         $databasePlatform = $schema->getDatabasePlatform();

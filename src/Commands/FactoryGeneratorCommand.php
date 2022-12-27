@@ -13,7 +13,7 @@ class FactoryGeneratorCommand extends Command
 {
     public $signature = 'factory:generate {model} {--overwrite : Overwrite an existing model}';
 
-    public $description = 'Generate a factory by suppling the path to your model';
+    public $description = 'Generate a factory by supplying the path to your model';
 
     public function handle(): int
     {
