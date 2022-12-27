@@ -135,7 +135,7 @@ class FactoryGenerator
 
         $items = collect($columns);
 
-        /** @var  \Doctrine\DBAL\Schema\Column $last */
+        /** @var \Doctrine\DBAL\Schema\Column $last */
         $last = $items->last();
 
         return \strlen($last->getName());
