@@ -135,7 +135,7 @@ class FactoryGenerator
 
         $items = collect($columns);
 
-        /** @var  \Doctrine\DBAL\Schema\Column $last */
+        /** @var \Doctrine\DBAL\Schema\Column $last */
         $last = $items->last();
 
         return \strlen($last->getName());
@@ -172,8 +172,7 @@ class FactoryGenerator
 
     protected function getColumnLength(Column $column, string $columnType): string
     {
-        $needles = ['string', 'binary'];
-        if (Str::contains($columnType, $needles) === \false) {
+        if (Str::contains($columnType, ['string', 'binary']) === \false) {
             return '';
         }
 
