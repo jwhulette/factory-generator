@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Database\Factories;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Factories\Factory;
 use Jwhulette\FactoryGenerator\Tests\Models\Generator;
 
-class FactoryGeneratorCommandTest__testCreateNewFactory__1 extends Factory
+class GeneratorFactory extends Factory
 {
     protected $model = Generator::class;
 
@@ -19,11 +17,11 @@ class FactoryGeneratorCommandTest__testCreateNewFactory__1 extends Factory
             'last_name'     => '',
             'date_of_birth' => '',
             'photo'         => '',
-            'CONFIRMED'     => '',
+            'confirmed'     => '',
             'name'          => '',
             'amount'        => '',
-            'amountDouble'  => '',
-            'amountFloat'   => '',
+            'amountdouble'  => '',
+            'amountfloat'   => '',
             'sunrise'       => '',
         ];
     }

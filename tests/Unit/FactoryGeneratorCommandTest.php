@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Jwhulette\FactoryGenerator\Tests\Unit;
 
 use Illuminate\Support\Facades\File;
-use Jwhulette\FactoryGenerator\Exceptions\FactoryGeneratorException;
 use Jwhulette\FactoryGenerator\Tests\Models\Generator;
 use Jwhulette\FactoryGenerator\Tests\TestCase;
 use Spatie\Snapshots\MatchesSnapshots;
@@ -39,7 +38,8 @@ class FactoryGeneratorCommandTest extends TestCase
         File::delete($file);
     }
 
-    public function testCreateNewFactory(): void
+    /** @test */
+    public function it_can_create_a_new_factory(): void
     {
         $this->artisan('factory:generate', ['model' => $this->model])
             ->assertExitCode(0);
@@ -53,7 +53,8 @@ class FactoryGeneratorCommandTest extends TestCase
         $this->assertInstanceOf(Generator::class, $factory);
     }
 
-    public function testErrorWhenFactoryExists(): void
+    /** @test */
+    public function it_throw_an_error_when_a_factory_exits(): void
     {
         $this->artisan('factory:generate', ['model' => $this->model]);
 
@@ -61,7 +62,8 @@ class FactoryGeneratorCommandTest extends TestCase
             ->assertExitCode(1);
     }
 
-    public function testOverrideOptionwhenFactoryExists(): void
+    /** @test */
+    public function it_overrides_options_when_factory_exits(): void
     {
         $this->artisan('factory:generate', ['model' => $this->model]);
 
@@ -75,7 +77,8 @@ class FactoryGeneratorCommandTest extends TestCase
         $this->assertInstanceOf(Generator::class, $factory);
     }
 
-    public function testCreateFactoryOptionLowerCase(): void
+    /** @test */
+    public function it_create_a_factory_with_lower_case_option(): void
     {
         config()->set('factory-generator.lower_case_column', true);
 
@@ -91,7 +94,8 @@ class FactoryGeneratorCommandTest extends TestCase
         $this->assertInstanceOf(Generator::class, $factory);
     }
 
-    public function testCreateFactoryOptionSetNullDefault(): void
+    /** @test */
+    public function it_creates_factory_with_null_default_option(): void
     {
         config()->set('factory-generator.definition.set_null_default', true);
 
@@ -107,7 +111,8 @@ class FactoryGeneratorCommandTest extends TestCase
         $this->assertInstanceOf(Generator::class, $factory);
     }
 
-    public function testCreateFactoryOptionSetDate(): void
+    /** @test */
+    public function it_creates_a_factory_with_date_options(): void
     {
         config()->set('factory-generator.definition.set_date_now', true);
 
@@ -123,7 +128,8 @@ class FactoryGeneratorCommandTest extends TestCase
         $this->assertInstanceOf(Generator::class, $factory);
     }
 
-    public function testCreateFactoryOptionAddColumnHint(): void
+    /** @test */
+    public function it_can_create_factory_with_column_hint_option(): void
     {
         config()->set('factory-generator.add_column_hint', true);
 
