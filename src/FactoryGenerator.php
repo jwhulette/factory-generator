@@ -26,13 +26,14 @@ class FactoryGenerator
      */
     public function generateFactory(string $model): string
     {
-        // Swap path seperators
+        // Swap path separators
         $model = Str::replace('\\', '/', $model);
         // Remove extension
         $model = Str::replace('.php', '', $model);
 
         $classMap = $this->generateClassMap($model);
 
+        /** @var string $namespacedModel */
         $namespacedModel = \key($classMap);
 
         $modelInstance = $this->makeModel($classMap);
@@ -126,8 +127,10 @@ class FactoryGenerator
      */
     public function makeDefinition(Model $model): string
     {
-        $skipColums = Config::get('factory-generator.skip_columns', \false);
+        /** @var array $skipColumns */
+        $skipColumns = Config::get('factory-generator.skip_columns', \false);
 
+        /** @var array $definitionConfigs */
         $definitionConfigs = Config::get('factory-generator.definition');
 
         $columns = $this->getColumns($model);
@@ -141,7 +144,7 @@ class FactoryGenerator
             $name = $column->getName();
 
             /* Skip any columns listed in the the skip columns configuration array */
-            if (\in_array($name, $skipColums)) {
+            if (\in_array($name, $skipColumns)) {
                 continue;
             }
 
@@ -355,7 +358,7 @@ class FactoryGenerator
      */
     public function makeModel(array $classMap): Model
     {
-        return  \resolve(\key($classMap));
+        return  \resolve((string) \key($classMap));
     }
 
     /**
@@ -405,6 +408,7 @@ class FactoryGenerator
 
         $platformName = $databasePlatform->getName();
 
+        /** @var array $customTypes */
         $customTypes = Config::get("factory-generator.custom_db_types.{$platformName}", []);
 
         foreach ($customTypes as $typeName => $doctrineTypeName) {

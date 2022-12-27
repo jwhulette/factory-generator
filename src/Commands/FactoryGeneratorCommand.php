@@ -17,6 +17,7 @@ class FactoryGeneratorCommand extends Command
 
     public function handle(): int
     {
+        /** @var string $model */
         $model = $this->argument('model');
 
         if ($this->option('overwrite') === true) {
