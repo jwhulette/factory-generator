@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Jwhulette\FactoryGenerator;
 
-use Illuminate\Database\Connection;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
+use Illuminate\Database\Connection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
@@ -61,7 +61,7 @@ class Render
         }
     }
 
-     /**
+    /**
      * @return array<\Doctrine\DBAL\Schema\Column>
      */
     public function getColumns(): array
@@ -203,7 +203,7 @@ class Render
         return Str::replace('{{ definition }}', $definition, $stub);
     }
 
-        /**
+    /**
      * @param array<\Doctrine\DBAL\Schema\Column> $columns
      *
      * @return int
@@ -234,7 +234,7 @@ class Render
 
     public function replaceModelNamespace(string $namespacedModel): void
     {
-        $this->stub=  Str::replace('{{ namespacedModel }}', $namespacedModel, $this->stub);
+        $this->stub = Str::replace('{{ namespacedModel }}', $namespacedModel, $this->stub);
     }
 
     public function replaceModelName(string $model): void
