@@ -41,11 +41,6 @@ class FactoryGeneratorCommand extends Command
         }
     }
 
-    /**
-     * @param string $errorMessage
-     *
-     * @return string
-     */
     protected function errorHints(string $errorMessage): string
     {
         if (Str::contains($errorMessage, 'Unknown database type')) {

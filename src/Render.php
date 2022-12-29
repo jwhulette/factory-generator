@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Jwhulette\FactoryGenerator;
 
+use Illuminate\Database\Connection;
+use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Column;
 use Illuminate\Database\Eloquent\Model;
@@ -13,62 +15,74 @@ use Illuminate\Support\Str;
 
 class Render
 {
+    protected string $stub;
+
+    protected string $tableName;
+
+    protected Connection $connection;
+
+    protected AbstractSchemaManager $schemaManager;
+
     protected const DATETIME_FIELDS = ['date', 'datetimetz', 'datetime'];
 
     protected const NUMERIC_FIELDS = ['integer', 'bigint', 'smallint'];
 
     public function renderStub(Model $modelInstance, string $modelName, string $namespacedModel): string
     {
-        $stub = $this->getFactoryStub();
+        $this->stub = $this->getFactoryStub();
 
-        $stub = $this->replacePlaceholders($modelName, $namespacedModel, $stub);
+        $this->setSchema($modelInstance);
 
-        return $this->createDefinition($modelInstance, $stub);
+        $this->replacePlaceholders($modelName, $namespacedModel);
+
+        return $this->createDefinition($modelInstance, $this->stub);
     }
 
-    protected function registerCustomMappings(AbstractSchemaManager $schema): void
+    public function setSchema(Model $model): void
     {
-        $databasePlatform = $schema->getDatabasePlatform();
+        $this->connection = $model->getConnection();
 
-        $platformName = $databasePlatform->getName();
+        $this->tableName = $this->connection->getTablePrefix().$model->getTable();
 
+        $this->schemaManager = $this->connection->getDoctrineSchemaManager();
+
+        $platform = $this->connection->getDoctrineConnection()->getDatabasePlatform();
+
+        $this->registerCustomMappings($platform);
+    }
+
+    protected function registerCustomMappings(AbstractPlatform $platform): void
+    {
         /** @var array $customTypes */
-        $customTypes = Config::get("factory-generator.custom_db_types.{$platformName}", []);
+        $customTypes = Config::get("factory-generator.custom_db_types.{$platform->getName()}", []);
 
         foreach ($customTypes as $typeName => $doctrineTypeName) {
-            $databasePlatform->registerDoctrineTypeMapping($typeName, $doctrineTypeName);
+            $platform->registerDoctrineTypeMapping($typeName, $doctrineTypeName);
         }
     }
 
      /**
-     * @param \Illuminate\Database\Eloquent\Model $model
-     *
      * @return array<\Doctrine\DBAL\Schema\Column>
      */
-    public function getColumns(Model $model): array
+    public function getColumns(): array
     {
-        $table = $model->getConnection()->getTablePrefix().$model->getTable();
-
-        $schema = $model->getConnection()->getDoctrineSchemaManager();
-
-        $this->registerCustomMappings($schema);
-
         $database = null;
 
-        if (strpos($table, '.')) {
-            [$database, $table] = explode('.', $table);
+        if (strpos($this->tableName, '.')) {
+            [$database, $this->tableName] = explode('.', $this->tableName);
         }
 
         try {
-            return $schema->listTableColumns($table, $database);
+            return $this->schemaManager->listTableColumns($this->tableName, $database);
         } catch (\Throwable $th) {
             throw $th;
         }
     }
+
     public function formatColumnName(string $columnName): string
     {
         if (Config::get('factory-generator.lower_case_column', \false)) {
-            return Str::of($columnName)->lower()->__toString();
+            return Str::lower($columnName);
         }
 
         return $columnName;
@@ -153,7 +167,7 @@ class Render
         /** @var array $definitionConfigs */
         $definitionConfigs = Config::get('factory-generator.definition');
 
-        $columns = $this->getColumns($model);
+        $columns = $this->getColumns();
 
         $formatPadding = $this->getFormatPadding($columns);
 
@@ -181,7 +195,7 @@ class Render
             );
         }
 
-        return Str::of($definition)->trim()->__toString();
+        return Str::of($definition)->trim()->toString();
     }
 
     public function replaceDefinition(string $stub, string $definition): string
@@ -213,28 +227,28 @@ class Render
         return $this->replaceDefinition($stub, $definition);
     }
 
-    public function replaceFactoryNamespace(string $stub, string $path): string
+    public function replaceFactoryNamespace(string $path): void
     {
-        return Str::replace('{{ factoryNamespace }}', $path, $stub);
+        $this->stub = Str::replace('{{ factoryNamespace }}', $path, $this->stub);
     }
 
-    public function replaceModelNamespace(string $namespacedModel, string $stub): string
+    public function replaceModelNamespace(string $namespacedModel): void
     {
-        return Str::replace('{{ namespacedModel }}', $namespacedModel, $stub);
+        $this->stub=  Str::replace('{{ namespacedModel }}', $namespacedModel, $this->stub);
     }
 
-    public function replaceModelName(string $stub, string $model): string
+    public function replaceModelName(string $model): void
     {
-        return Str::replace('{{ model }}', $model, $stub);
+        $this->stub = Str::replace('{{ model }}', $model, $this->stub);
     }
 
-    public function replacePlaceholders(string $model, string $namespacedModel, string $sub): string
+    public function replacePlaceholders(string $model, string $namespacedModel): void
     {
-        $replace = $this->replaceModelName($sub, $model);
+        $this->replaceModelName($model);
 
-        $replace = $this->replaceModelNamespace($namespacedModel, $replace);
+        $this->replaceModelNamespace($namespacedModel);
 
-        return $this->replaceFactoryNamespace($replace, 'Database\Factories');
+        $this->replaceFactoryNamespace('Database\Factories');
     }
 
     public function getFactoryStub(): string

@@ -58,7 +58,7 @@ class FactoryGenerator
     {
         $table = $model->getTable();
 
-        return Str::of($table)->afterLast('.')->camel()->ucfirst()->singular()->__toString();
+        return Str::of($table)->afterLast('.')->camel()->ucfirst()->singular()->toString();
     }
 
     public function makeModel(array $classMap): Model
@@ -66,11 +66,6 @@ class FactoryGenerator
         return  \resolve((string) \key($classMap));
     }
 
-    /**
-     * @param string $model
-     *
-     * @return array
-     */
     public function generateClassMap(string $model): array
     {
         $model = Str::of($model)->replace('\\', '/')

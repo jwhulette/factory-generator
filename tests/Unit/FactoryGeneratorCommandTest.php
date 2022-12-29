@@ -145,7 +145,8 @@ class FactoryGeneratorCommandTest extends TestCase
         $this->assertInstanceOf(Generator::class, $factory);
     }
 
-    public function testCreateNewFactoryWithWindowsPath(): void
+    /** @test */
+    public function it_can_create_a_factory_with_windows_path(): void
     {
         $model = 'tests\Models\Generator.php';
 
