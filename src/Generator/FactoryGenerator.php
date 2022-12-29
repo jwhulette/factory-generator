@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jwhulette\FactoryGenerator;
+namespace Jwhulette\FactoryGenerator\Generator;
 
 use Composer\ClassMapGenerator\ClassMapGenerator;
 use Illuminate\Database\Eloquent\Model;
@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 use Jwhulette\FactoryGenerator\Exceptions\FactoryGeneratorException;
-use Jwhulette\FactoryGenerator\Render;
+use Jwhulette\FactoryGenerator\Generator\Render;
 
 class FactoryGenerator
 {

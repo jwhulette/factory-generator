@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Jwhulette\FactoryGenerator;
+namespace Jwhulette\FactoryGenerator\Generator;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
@@ -253,7 +253,7 @@ class Render
 
     public function getFactoryStub(): string
     {
-        $stub = __DIR__.'/stubs/factory.stub';
+        $stub =\base_path('src/stubs/factory.stub');
 
         return File::get($stub);
     }
