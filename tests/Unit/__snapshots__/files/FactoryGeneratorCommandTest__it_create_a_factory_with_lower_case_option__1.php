@@ -7,7 +7,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Jwhulette\FactoryGenerator\Tests\Models\Generator;
 
-class GeneratorFactory extends Factory
+class FactoryGeneratorCommandTest__it_create_a_factory_with_lower_case_option__1 extends Factory
 {
     protected $model = Generator::class;
 

@@ -44,7 +44,7 @@ class FactoryGeneratorCommand extends Command
     protected function errorHints(string $errorMessage): string
     {
         if (Str::contains($errorMessage, 'Unknown database type')) {
-            return 'Set a custom type in the custom_db_types array, in the factory-generator configration';
+            return 'Set a custom type in the custom_db_types array, in the factory-generator configuration';
         }
 
         return '';
