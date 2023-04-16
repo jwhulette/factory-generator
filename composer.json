@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": "^8.1|^8.2",
+        "composer/class-map-generator": "^1.0",
         "composer/composer": "^2.0",
         "doctrine/dbal": "^3.1",
         "spatie/laravel-package-tools": "^1.4.3"
@@ -43,7 +44,7 @@
         "test": "vendor/bin/phpunit",
         "fix": "PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix src --allow-risky=yes --config=.php-cs-fixer.dist.php",
         "update-snapshots": "vendor/bin/phpunit -d --update-snapshots",
-        "tests": [
+        "ts": [
             "vendor/bin/phpstan analyse --memory-limit=2G",
             "vendor/bin/phpunit"
         ]
