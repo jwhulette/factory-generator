@@ -7,7 +7,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Jwhulette\FactoryGenerator\Tests\Models\Generator;
 
-class GeneratorFactory extends Factory
+class FactoryGeneratorCommandTest__it_creates_a_factory_with_date_options__1 extends Factory
 {
     protected $model = Generator::class;
 
