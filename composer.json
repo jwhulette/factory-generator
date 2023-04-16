@@ -41,8 +41,7 @@
     "scripts": {
         "phpstan": "vendor/bin/phpstan analyse --memory-limit=2G",
         "test": "vendor/bin/phpunit",
-        "test-coverage": "vendor/bin/phpunit --coverage-html coverage",
-        "format": "vendor/bin/php-cs-fixer fix src --allow-risky=yes --config=.php_cs.dist.php",
+        "fix": "PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix src --allow-risky=yes --config=.php-cs-fixer.dist.php",
         "update-snapshots": "vendor/bin/phpunit -d --update-snapshots",
         "tests": [
             "vendor/bin/phpstan analyse --memory-limit=2G",

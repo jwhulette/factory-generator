@@ -4,18 +4,19 @@ declare(strict_types=1);
 
 namespace Jwhulette\FactoryGenerator\Commands;
 
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Config;
-use Jwhulette\FactoryGenerator\FactoryGenerator;
+use Illuminate\Support\Str;
+use Jwhulette\FactoryGenerator\Generator\FactoryGenerator;
 
 class FactoryGeneratorCommand extends FactoryGenerator
 {
     public $signature = 'factory:generate {model} {--overwrite : Overwrite an existing model}';
 
-    public $description = 'Generate a factory by suppling the path to your model';
+    public $description = 'Generate a factory by supplying the path to your model';
 
     public function handle(): int
     {
+        /** @var string $model */
         $model = $this->argument('model');
 
         $model = $this->cleanInput($model);
@@ -27,7 +28,7 @@ class FactoryGeneratorCommand extends FactoryGenerator
         try {
             $modelName = $this->generateFactory($model);
 
-            $this->info($modelName . 'Factory created!');
+            $this->info($modelName.'Factory created!');
 
             return 0;
         } catch (\Throwable $th) {
@@ -41,15 +42,10 @@ class FactoryGeneratorCommand extends FactoryGenerator
         }
     }
 
-    /**
-     * @param string $errorMessage
-     *
-     * @return string
-     */
     protected function errorHints(string $errorMessage): string
     {
         if (Str::contains($errorMessage, 'Unknown database type')) {
-            return 'Set a custom type in the custom_db_types array, in the factory-generator configration';
+            return 'Set a custom type in the custom_db_types array, in the factory-generator configuration';
         }
 
         return '';

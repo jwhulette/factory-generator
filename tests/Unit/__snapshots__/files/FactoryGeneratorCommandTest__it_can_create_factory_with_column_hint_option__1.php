@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Jwhulette\FactoryGenerator\Tests\Models\Generator;
 
-class GeneratorFactory extends Factory
+class FactoryGeneratorCommandTest__it_can_create_factory_with_column_hint_option__1 extends Factory
 {
     protected $model = Generator::class;
 

@@ -1,36 +1,52 @@
 name: run-tests
 
-on:
-  push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+on: [push]
 
 jobs:
+  php-cs-fixer:
+      runs-on: ubuntu-latest
+      steps:
+          - name: Checkout code
+            uses: actions/checkout@v3
+            with:
+                ref: ${{ github.head_ref }}
+
+          - name: Run PHP CS Fixer
+            uses: docker://oskarstark/php-cs-fixer-ga
+            with:
+                args: --config=.php-cs-fixer.dist.php --allow-risky=yes
+
+          - name: Commit changes
+            uses: stefanzweifel/git-auto-commit-action@v4
+            with:
+                commit_message: Fix styling
   test:
+    needs: php-cs-fixer
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: true
       matrix:
         os: [ubuntu-latest]
-        php: [8.0]
-        laravel: [8.*]
-        stability: [prefer-stable]
+        php: [8.1, 8.2]
+        laravel: [10.*, 9.*]
+        stability: [prefer-lowest, prefer-stable]
         include:
-          - laravel: 8.*
-            testbench: ^6.18
+          - laravel: 10.*
+            testbench: 8.*
+          - laravel: 9.*
+            testbench: 7.*
 
-    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }} - ${{ matrix.os }}
+    name: P${{ matrix.php }} - L${{ matrix.laravel }} - ${{ matrix.stability }}
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick, fileinfo
+          extensions: curl, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, iconv
           coverage: none
 
       - name: Setup problem matchers
@@ -40,8 +56,12 @@ jobs:
 
       - name: Install dependencies
         run: |
-          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" --no-interaction --no-update
+          composer require "laravel/framework:${{ matrix.laravel }}" "orchestra/testbench:${{ matrix.testbench }}" "nesbot/carbon:^2.62.1" --no-interaction --no-update
           composer update --${{ matrix.stability }} --prefer-dist --no-interaction
 
+      - name: Run larastan
+        run: ./vendor/bin/phpstan analyse --memory-limit=2G
+        if: matrix.laravel > '9.*' && matrix.dependency-version == 'prefer-stable'
+
       - name: Execute tests
-        run: vendor/bin/phpunit -d --without-creating-snapshots
+        run: ./vendor/bin/phpunit
