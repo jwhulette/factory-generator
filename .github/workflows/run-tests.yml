@@ -64,4 +64,4 @@ jobs:
         if: matrix.laravel > '9.*' && matrix.dependency-version == 'prefer-stable'
 
       - name: Execute tests
-        run: ./vendor/bin/phpunit
+        run: ./vendor/bin/phpunit -d --without-creating-snapshots
