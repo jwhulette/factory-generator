@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Jwhulette\FactoryGenerator\Generator;
 
 use Composer\ClassMapGenerator\ClassMapGenerator;
+use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\File;
@@ -12,7 +13,7 @@ use Illuminate\Support\Str;
 use Jwhulette\FactoryGenerator\Exceptions\FactoryGeneratorException;
 use Jwhulette\FactoryGenerator\Generator\Render;
 
-class FactoryGenerator
+class FactoryGenerator extends Command
 {
     public function generateFactory(string $model): string
     {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Jwhulette\FactoryGenerator\Commands;
 
-use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Str;
 use Jwhulette\FactoryGenerator\Generator\FactoryGenerator;
