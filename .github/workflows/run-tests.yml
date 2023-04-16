@@ -61,7 +61,6 @@ jobs:
 
       - name: Run larastan
         run: ./vendor/bin/phpstan analyse --memory-limit=2G
-        if: matrix.laravel > '9.*' && matrix.dependency-version == 'prefer-stable'
 
       - name: Execute tests
         run: ./vendor/bin/phpunit

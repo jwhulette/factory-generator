@@ -69,7 +69,8 @@ class FactoryGenerator extends Command
 
     public function generateClassMap(string $model): array
     {
-        $model = Str::of($model)->replace('\\', '/')
+        $model = Str::of($model)
+            ->replace('\\', '/')
             ->remove('.php')
             ->toString();
 
