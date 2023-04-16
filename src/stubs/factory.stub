@@ -1,8 +1,9 @@
 <?php
 
+declare(strict_types=1);
+
 namespace {{ factoryNamespace }};
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use {{ namespacedModel }};
 

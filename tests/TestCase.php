@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Jwhulette\FactoryGenerator\Tests;
 
 use Composer\Autoload\ClassLoader;
-use Orchestra\Testbench\TestCase as BaseTestCase;
 use Jwhulette\FactoryGenerator\FactoryGeneratorServiceProvider;
+use Orchestra\Testbench\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
@@ -14,9 +14,8 @@ class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        app()
-            ->setBasePath(realpath(__DIR__ . '/..'))
-            ->useDatabasePath(__DIR__ . '/database');
+        app()->setBasePath(realpath(__DIR__.'/..'))
+            ->useDatabasePath(__DIR__.'/database');
 
         $this->loadMigrationsFrom(database_path('migrations'));
 
@@ -40,7 +39,7 @@ class TestCase extends BaseTestCase
         ];
     }
 
-    protected function getEnvironmentSetUp($app)
+    protected function getEnvironmentSetUp($app): void
     {
         parent::getEnvironmentSetUp($app);
 

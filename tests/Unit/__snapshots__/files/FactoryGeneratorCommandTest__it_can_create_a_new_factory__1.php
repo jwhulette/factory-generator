@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Factories;
 
-use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Jwhulette\FactoryGenerator\Tests\Models\Generator;
 
-class GeneratorFactory extends Factory
+class FactoryGeneratorCommandTest__it_can_create_a_new_factory__1 extends Factory
 {
     protected $model = Generator::class;
 
@@ -15,7 +16,7 @@ class GeneratorFactory extends Factory
         return [
             'first_name'    => '',
             'last_name'     => '',
-            'date_of_birth' => \now(),
+            'date_of_birth' => '',
             'photo'         => '',
             'CONFIRMED'     => '',
             'name'          => '',
