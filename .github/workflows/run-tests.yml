@@ -63,4 +63,4 @@ jobs:
         run: ./vendor/bin/phpstan analyse --memory-limit=2G
 
       - name: Execute tests
-        run: ./vendor/bin/phpunit -d --update-snapshots --without-creating-snapshots
+        run: ./vendor/bin/phpunit
